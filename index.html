@@ -18,8 +18,22 @@
     /* style the body of the page here */
     body {
       font-family: sans-serif;
-      margin: 0;
-      padding: 0;
+      margin: 0px;
+      height: 100%;
+      width: 100%;
+    }
+
+    /* style header */
+    header {
+      position: fixed;
+      top: 12px;
+      left: 70px;
+      width: 260px;
+      height: 50px;
+      background-color: rgba(255, 255, 255, 1.0);
+      box-shadow: 0px 0px 0px 2px rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+      z-index: 800;
     }
 
     /* style the div with an id of "map" here */
@@ -79,10 +93,39 @@
       background: #5C7DB8;
       border-color: #5C7DB8;
     }
+
+    /* the text inputs */
+    h1 {
+      color: black;
+      font-size: 18px;
+      display: inline-block;
+      margin-top: 0.25em;
+      margin-bottom: 0.0em;
+      margin-left: 0.5em;
+      margin-right: 0;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      color: black;
+      font-size: 12px;
+      display: inline-block;
+      margin-top: 0.0em;
+      margin-bottom: 0.0em;
+      margin-left: 0.75em;
+      margin-right: 0;
+    }
   </style>
 </head>
 
 <body>
+  <!-- header -->
+  <header>
+    <h1>Map Name Here</h1><br>
+    <h2>A project of the Beloved Community Initiative</h2>
+  </header>
+  <!-- end header -->
   <!-- define a div called "map" here -->
   <div id="map"></div>
   <!-- ui slider -->
