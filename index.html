@@ -287,6 +287,8 @@
             layer.on('mouseout', function() {
               layer.closePopup();
             });
+          } else {
+            layer.unbindPopup();
           };
 
         } // end onEachFeature
@@ -345,6 +347,8 @@
             layer.on('mouseout', function() {
               layer.closePopup();
             });
+          } else {
+            layer.unbindPopup();
           };
 
         } // end onEachFeature
@@ -402,6 +406,8 @@
             layer.on('mouseout', function() {
               layer.closePopup();
             });
+          } else {
+            layer.unbindPopup();
           };
 
         } // end onEachFeature
@@ -532,6 +538,7 @@
               shadowSize: [0, 0]
             })
           );
+          layer.unbindPopup();
         }
 
       });
@@ -572,6 +579,7 @@
               shadowSize: [0, 0]
             })
           );
+          layer.unbindPopup();
         }
 
       });
@@ -612,6 +620,7 @@
               shadowSize: [0, 0]
             })
           );
+          layer.unbindPopup();
         }
 
       });
