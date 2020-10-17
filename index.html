@@ -30,6 +30,7 @@
       bottom: 0;
     }
 
+    /* style the slider control */
     #slider {
       position: absolute;
       height: 43px;
@@ -43,9 +44,40 @@
       border-bottom: 1px solid
     }
 
+    /* style the temporal legend */
     #temporal {
       background-color: white;
       height: 43px
+    }
+
+    /* style the time selection control */
+    #time-select {
+      position: absolute;
+      bottom: 11px;
+      left: 465px;
+      z-index: 1000;
+      padding: 0.54em;
+      background: rgba(255, 255, 255, 1.0);
+      box-shadow: 0px 0px 0px 1px rgba(192, 192, 192, 1.0);
+    }
+
+    #time-select input {
+      display: inline-block;
+      border: 1px solid #999;
+      font-size: 14px;
+      border-radius: 4px;
+      height: 18px;
+      line-height: 18px;
+      width: 50px;
+    }
+
+    #time-select input[type='submit'] {
+      box-sizing: content-box;
+      padding: 0 1em;
+      text-transform: uppercase;
+      color: white;
+      background: #5C7DB8;
+      border-color: #5C7DB8;
     }
   </style>
 </head>
@@ -60,9 +92,19 @@
   <!-- end slider -->
   <!-- temporal legend -->
   <div id='temporal' class='py12 px12 border border--gray-light round bottom left wmax200'>
-    <h3 class='txt-bold'>Year: <span></span></h3>
+    <h3 class='txt-bold'>Year: <span class="spanTxt"></span></h3>
   </div>
   <!-- end temporal -->
+  <!-- time select control -->
+  <div id="time-select" class="leaflet-bar">
+    <form action="#" id="form">
+      <label for="year">
+        Year
+        <input id="year" type="year" name="year">
+      </label>
+      <input type="submit" value="Update">
+    </form>
+  </div>
   <!-- load leaflet.js library here -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
   <!--d3js for requesting files into web application-->
@@ -91,6 +133,17 @@
 
     // Set the currentYear to whatever value is in the slider on load
     let currentYear = $('.slider').val();
+
+    // define the year input form
+    const timeForm = document.getElementById('form');
+
+    // if a year is submitted on timeForm...
+    timeForm.addEventListener('submit', function updateTimeRange(e) {
+      location.reload(); // reload the map
+      let timeSelect = document.getElementById('year').value; // define the submitted year
+      let currentYear = $('.slider').val(timeSelect); // redefine currentYear as the submitted year
+      e.preventDefault(); // prevent defaulting to 1791
+    });
 
     // use the Jawg Sunny base map - nice, clean, not fussy
     L.tileLayer('https://{s}.tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=odaScIS8yTVoAy0mjYBoHMXXasRTvbpjrTyjwQiZutN3FU3WE82xJ6FyqbbglesB', {
@@ -165,7 +218,7 @@
                   prefix: 'fas',
                   markerColor: 'red', // give the marker a color
                   iconColor: 'rgba(0,0,0,0)', // give the icon in the marker a color
-                  iconSize: [0,0],
+                  iconSize: [0, 0],
                   shadowSize: [0, 0]
                 })
               });
@@ -192,13 +245,7 @@
               layer.closePopup();
             });
           };
-/*
-          if (currentYear >= props.start_year && currentYear <= props.end_year) {
-            layer.addTo(map);
-          } else {
-            map.removeLayer(layer);
-          };
-*/
+
         } // end onEachFeature
 
       }).addTo(map); // end churches layer
@@ -229,7 +276,7 @@
                   prefix: 'fas',
                   markerColor: 'blue', // give the marker a color
                   iconColor: 'rgba(0,0,0,0)', // give the icon in the marker a color
-                  iconSize: [0,0],
+                  iconSize: [0, 0],
                   shadowSize: [0, 0]
                 })
               });
@@ -256,13 +303,7 @@
               layer.closePopup();
             });
           };
-/*
-          if (currentYear >= props.start_year && currentYear <= props.end_year) {
-            layer.addTo(map);
-          } else {
-            map.removeLayer(layer);
-          };
-*/
+
         } // end onEachFeature
 
       }).addTo(map); // end people layer
@@ -293,7 +334,7 @@
                   prefix: 'fas',
                   markerColor: 'green', // give the marker a color
                   iconColor: 'rgba(0,0,0,0)', // give the icon in the marker a color
-                  iconSize: [0,0],
+                  iconSize: [0, 0],
                   shadowSize: [0, 0]
                 })
               });
@@ -319,13 +360,7 @@
               layer.closePopup();
             });
           };
-/*
-          if (currentYear >= props.start_year && currentYear <= props.end_year) {
-            layer.addTo(map);
-          } else {
-            map.removeLayer(layer);
-          };
-*/
+
         } // end onEachFeature
 
       }).addTo(map); // end towns layer
@@ -450,7 +485,7 @@
               prefix: 'fas',
               markerColor: 'red', // give the marker a color
               iconColor: 'rgba(0,0,0,0)', // give the icon in the marker a color
-              iconSize: [0,0],
+              iconSize: [0, 0],
               shadowSize: [0, 0]
             })
           );
@@ -490,7 +525,7 @@
               prefix: 'fas',
               markerColor: 'blue', // give the marker a color
               iconColor: 'rgba(0,0,0,0)', // give the icon in the marker a color
-              iconSize: [0,0],
+              iconSize: [0, 0],
               shadowSize: [0, 0]
             })
           );
@@ -530,7 +565,7 @@
               prefix: 'fas',
               markerColor: 'green', // give the marker a color
               iconColor: 'rgba(0,0,0,0)', // give the icon in the marker a color
-              iconSize: [0,0],
+              iconSize: [0, 0],
               shadowSize: [0, 0]
             })
           );
