@@ -132,6 +132,12 @@
     .leaflet-grab {
       cursor: pointer;
     }
+
+    hr.someClass {
+      width: 100%;
+      height: 6px;
+      border-top: 1px solid black
+    }
   </style>
 </head>
 
@@ -148,7 +154,8 @@
             <h3>Type:&nbsp&nbsp</h3><select id="type" name="type">
               <option value="Event">Event </option>
               <option value="Person">Person </option>
-              <option value="Church">Place of Worship </option>
+              <option value="Episcopal Church">Episcopal Church </option>
+              <option value="Other Place of Worship">Other Place of Worship </option>
               <option value="Town">Populated Place </option>
               <option value="Railroad">Railroad </option>
               <option value="Other">Other</option>
@@ -184,6 +191,8 @@
   <script src="https://cdn.jsdelivr.net/npm/json2csv"></script>
   <!-- for icon markers -->
   <script src="js/leaflet.extra-markers.min.js"></script>
+  <!-- for grouped layer control -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.js"></script>
   <!-- are these necessary? -->
   <script src="https://wzrd.in/standalone/formdata-polyfill"></script>
   <script src="https://wzrd.in/standalone/promise-polyfill@latest"></script>
@@ -194,7 +203,7 @@
   <script>
 
     // the location of the form input to google sheet script
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyL46r9ePJeYCrmvEe1qXsz1BbymbqSIJYo4hGIDdcfJxZbrqIq/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyL7KfWDvjkcCkrp4zomgj9yQNg-y94JLzeMYmuRq9v5WEeHOhb/exec';
     // define the html form on this page
     const form = document.forms['userInputs'];
 
@@ -240,25 +249,37 @@
     }).addTo(map);
 
     // define layer groups
-    var churchLayer = L.layerGroup();
+    var episcopalLayer = L.layerGroup();
+    var otherPWLayer = L.layerGroup();
+    var eventLayer = L.layerGroup();
     var peopleLayer = L.layerGroup();
     var townLayer = L.layerGroup();
+    var railLayer = L.layerGroup();
+    var otherLayer = L.layerGroup();
 
     // define the overlays
     const overlays = {
-      "Places of Worship": churchLayer,
-      "People": peopleLayer,
-      "Populated Places": townLayer,
-    };
+      "Layers": {
+        "Events": eventLayer,
+        "People": peopleLayer,
+        "Populated Places": townLayer,
+        "Railroads": railLayer,
+        "Other": otherLayer,
+      },
+      "Places of Worship": {
+        "Episcopal Churches": episcopalLayer,
+        "Other Places of Worship": otherPWLayer,
+      },
+    }
 
     // define a layer control and add the overlays
-    const layerControl = L.control.layers(null, overlays, {
+    const layerControl = L.control.groupedLayers(null, overlays, {
       collapsed: false,
     }).addTo(map);
 
     // retrieve the google sheet
     $.getJSON(
-      'https://sheets.googleapis.com/v4/spreadsheets/1d1BaOwbR9om38Li3L3qvqpWSjZpc5XM4ATT1i1U5qAQ/values/Sheet1?key=AIzaSyA8z0818hSekRC1lgw8ReYmLyt1cgFl1ns'
+      'https://sheets.googleapis.com/v4/spreadsheets/1fZ71YgNbW0oxMUtao-csfvb5I8GfUqEh3-gVb7JBuZE/values/UserInputs?key=AIzaSyA8z0818hSekRC1lgw8ReYmLyt1cgFl1ns'
     ).then(function(sheet) {
       // define the sheet value results
       let res = sheet.values;
@@ -272,31 +293,26 @@
           let data = results.data;
           // iterate through each row
           data.forEach(function(each) {
-            // if the user input is a church...
-            if (each.type == "Church") {
-              const userChurches = L.marker([each.lat, each.long], {
+            // if the user input is an event...
+            if (each.type == "Event") {
+              const userEvents = L.marker([each.lat, each.long], {
                 icon: L.ExtraMarkers.icon({
-                  icon: 'fas fa-place-of-worship',
+                  icon: 'fas fa-calendar-day',
                   prefix: 'fas',
-                  markerColor: 'red', // give the marker a color
+                  markerColor: 'orange', // give the marker a color
                   iconColor: 'white' // give the icon in the marker a color
                 })
               });
               // bind a popup to each marker
-              userChurches.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr>" + each.moreInfo + "<hr><img src='https://upload.wikimedia.org/wikipedia/commons/a/a3/Santuario_de_Las_Lajas%2C_Ipiales%2C_Colombia%2C_2015-07-21%2C_DD_21-23_HDR.jpg'/>", {
-                closeButton: false
+              userEvents.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo, {
+                closeButton: true
               });
               // open on mouseover
-              userChurches.on('mouseover', function() {
-                userChurches.openPopup();
+              userEvents.on('mouseover', function() {
+                userEvents.openPopup();
               });
-              // close on mouseout
-              userChurches.on('mouseout', function() {
-                userChurches.closePopup();
-              });
-              churchLayer.addLayer(userChurches); // add the layer to the layer group
-              churchLayer.addTo(map); // add the layer group to the map
-              //layerControl.addOverlay(userChurches, "Places of Worship"); // add the layer to the layer control
+              eventLayer.addLayer(userEvents); // add the layer to the layer group
+              eventLayer.addTo(map); // add the layer group to the map
             };
             // if the user input is a person...
             if (each.type == "Person") {
@@ -309,20 +325,60 @@
                 })
               });
               // bind a popup to each marker
-              userPeople.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr>" + each.moreInfo, {
-                closeButton: false
+              userPeople.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo, {
+                closeButton: true
               });
               // open on mouseover
               userPeople.on('mouseover', function() {
                 userPeople.openPopup();
               });
-              // close on mouseout
-              userPeople.on('mouseout', function() {
-                userPeople.closePopup();
-              });
               peopleLayer.addLayer(userPeople); // add the layer to the layer group
               peopleLayer.addTo(map); // add the layer group to the map
               //layerControl.addOverlay(userPeople, "People"); // add the layer to the layer control
+            };
+            // if the user input is a church...
+            if (each.type == "Episcopal Church") {
+              const userEpiscopal = L.marker([each.lat, each.long], {
+                icon: L.ExtraMarkers.icon({
+                  icon: 'fas fa-place-of-worship',
+                  prefix: 'fas',
+                  markerColor: 'red', // give the marker a color
+                  iconColor: 'white' // give the icon in the marker a color
+                })
+              });
+              // bind a popup to each marker
+              userEpiscopal.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo, {
+                closeButton: true
+              });
+              // open on mouseover
+              userEpiscopal.on('mouseover', function() {
+                userEpiscopal.openPopup();
+              });
+              episcopalLayer.addLayer(userEpiscopal); // add the layer to the layer group
+              episcopalLayer.addTo(map); // add the layer group to the map
+              //layerControl.addOverlay(userEpiscopal, "Places of Worship"); // add the layer to the layer control
+            };
+            // if the user input is another place of worship...
+            if (each.type == "Other Place of Worship") {
+              const userOtherPW = L.marker([each.lat, each.long], {
+                icon: L.ExtraMarkers.icon({
+                  icon: 'fas fa-place-of-worship',
+                  prefix: 'fas',
+                  markerColor: 'blue', // give the marker a color
+                  iconColor: 'white' // give the icon in the marker a color
+                })
+              });
+              // bind a popup to each marker
+              userOtherPW.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo, {
+                closeButton: true
+              });
+              // open on mouseover
+              userOtherPW.on('mouseover', function() {
+                userOtherPW.openPopup();
+              });
+              otherPWLayer.addLayer(userOtherPW); // add the layer to the layer group
+              otherPWLayer.addTo(map); // add the layer group to the map
+              //layerControl.addOverlay(userEpiscopal, "Places of Worship"); // add the layer to the layer control
             };
             // if the user input is a town...
             if (each.type == "Town") {
@@ -335,20 +391,58 @@
                 })
               });
               // bind a popup to each marker
-              userTowns.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr>" + each.moreInfo, {
-                closeButton: false
+              userTowns.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo, {
+                closeButton: true
               });
               // open on mouseover
               userTowns.on('mouseover', function() {
                 userTowns.openPopup();
               });
-              // close on mouseout
-              userTowns.on('mouseout', function() {
-                userTowns.closePopup();
-              });
               townLayer.addLayer(userTowns); // add the layer to the layer group
               townLayer.addTo(map); // add the layer group to the map
               //layerControl.addOverlay(userTowns, "Populated Places"); // add the layer to the layer control
+            };
+            // if the user input is a railroad...
+            if (each.type == "Railroad") {
+              const userRails = L.marker([each.lat, each.long], {
+                icon: L.ExtraMarkers.icon({
+                  icon: 'fas fa-train',
+                  prefix: 'fas',
+                  markerColor: 'purple', // give the marker a color
+                  iconColor: 'white' // give the icon in the marker a color
+                })
+              });
+              // bind a popup to each marker
+              userRails.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo, {
+                closeButton: true
+              });
+              // open on mouseover
+              userRails.on('mouseover', function() {
+                userRails.openPopup();
+              });
+              railLayer.addLayer(userRails); // add the layer to the layer group
+              railLayer.addTo(map); // add the layer group to the map
+            };
+            // if the user input is something else...
+            if (each.type == "Other") {
+              const userOther = L.marker([each.lat, each.long], {
+                icon: L.ExtraMarkers.icon({
+                  icon: 'fas fa-question-circle',
+                  prefix: 'fas',
+                  markerColor: 'purple', // give the marker a color
+                  iconColor: 'white' // give the icon in the marker a color
+                })
+              });
+              // bind a popup to each marker
+              userOther.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo, {
+                closeButton: true
+              });
+              // open on mouseover
+              userOther.on('mouseover', function() {
+                userOther.openPopup();
+              });
+              otherLayer.addLayer(userOther); // add the layer to the layer group
+              otherLayer.addTo(map); // add the layer group to the map
             };
           });
         }

@@ -121,7 +121,7 @@
       line-height: 10px;
       border-radius: 2px;
       height: 10 px;
-      max-height: 300px;
+      max-height: 400px;
       overflow: auto;
     }
 
@@ -179,6 +179,8 @@
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <!-- for icon markers -->
   <script src="js/leaflet.extra-markers.min.js"></script>
+  <!-- for grouped layer control -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.js"></script>
   <!-- papaparse for bringing in google spreadsheet data -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js "></script>
   <!-- javascript here -->
@@ -212,13 +214,56 @@
       position: 'bottomright' // position the scale bar at the bottom-left corner
     }).addTo(map);
 
+    function getColor(d) {
+      return d === "Episcopal Church" ? 'red' :
+        d === "Other Place of Worship" ? 'blue' :
+        d === "Event" ? 'orange' :
+        d === "Person" ? 'blue' :
+        d === "Town" ? 'green' :
+        d === "Railroad" ? 'purple' :
+        d === "Other" ? 'purple' :
+        'blue';
+    };
+
+    function getIcon(d) {
+      return d === "Episcopal Church" ? 'fas fa-place-of-worship' :
+        d === "Other Place of Worship" ? 'fas fa-place-of-worship' :
+        d === "Event" ? 'fas fa-calendar-day' :
+        d === "Person" ? 'fas fa-user-circle' :
+        d === "Town" ? 'fas fa-landmark' :
+        d === "Railroad" ? 'fas fa-train' :
+        d === "Other" ? 'fas fa-question-circle' :
+        'fas fa-question-circle';
+    };
+
     // define layer groups
     var episcopalLayer = L.layerGroup();
+    var otherPWLayer = L.layerGroup();
     var eventLayer = L.layerGroup();
     var peopleLayer = L.layerGroup();
     var townLayer = L.layerGroup();
     var railLayer = L.layerGroup();
+    var otherLayer = L.layerGroup();
+    var allPoints = L.layerGroup();
 
+    // define the overlays
+    const overlays = {
+      "Layers": {
+        "Events": eventLayer,
+        "People": peopleLayer,
+        "Populated Places": townLayer,
+        "Railroads": railLayer,
+        "Other": otherLayer,
+      },
+      "Places of Worship": {
+        "Episcopal Churches": episcopalLayer,
+        "Other Places of Worship": otherPWLayer,
+      },
+      "Everything": {
+        "All Points": allPoints,
+      },
+    };
+/*
     // define the overlays
     const overlays = {
       "Episcopal Churches": episcopalLayer,
@@ -227,11 +272,25 @@
       "Populated Places": townLayer,
       "Railroads": railLayer,
     };
-
+*/
     // define a layer control and add the overlays
-    const layerControl = L.control.layers(null, overlays, {
+    const layerControl = L.control.groupedLayers(null, overlays, {
       collapsed: false,
     }).addTo(map);
+
+    map.on('overlayadd', function(eo) {
+  		if (eo.name === 'All Points') {
+    		setTimeout(function(){map.removeLayer(eventLayer)}, 10);
+        setTimeout(function(){map.removeLayer(peopleLayer)}, 10);
+        setTimeout(function(){map.removeLayer(townLayer)}, 10);
+        setTimeout(function(){map.removeLayer(railLayer)}, 10);
+        setTimeout(function(){map.removeLayer(otherLayer)}, 10);
+        setTimeout(function(){map.removeLayer(episcopalLayer)}, 10);
+        setTimeout(function(){map.removeLayer(otherPWLayer)}, 10);
+  		} else {
+        setTimeout(function(){map.removeLayer(allPoints)}, 10);
+  		}
+		});
 
     // retrieve the google sheet
     $.getJSON(
@@ -251,6 +310,16 @@
           data.forEach(function(each) {
             // declare empty markers to be updated with later conditions
             let episcopalChurches = L.marker([each.lat, each.long], {
+              icon: L.ExtraMarkers.icon({
+                icon: 'fas fa-user-circle',
+                prefix: 'fas',
+                markerColor: 'blue', // give the marker a color
+                iconColor: 'rgba(0,0,0,0)', // give the icon in the marker a color
+                iconSize: [0, 0],
+                shadowSize: [0, 0]
+              })
+            });
+            let otherPW = L.marker([each.lat, each.long], {
               icon: L.ExtraMarkers.icon({
                 icon: 'fas fa-user-circle',
                 prefix: 'fas',
@@ -300,6 +369,51 @@
                 shadowSize: [0, 0]
               })
             });
+            let other = L.marker([each.lat, each.long], {
+              icon: L.ExtraMarkers.icon({
+                icon: 'fas fa-user-circle',
+                prefix: 'fas',
+                markerColor: 'blue', // give the marker a color
+                iconColor: 'rgba(0,0,0,0)', // give the icon in the marker a color
+                iconSize: [0, 0],
+                shadowSize: [0, 0]
+              })
+            });
+
+            // *** All of the Points ***
+            let everyPoint = L.marker([each.lat, each.long], {
+              icon: L.ExtraMarkers.icon({
+                icon: getIcon(each.type),
+                prefix: 'fas',
+                markerColor: getColor(each.type), // give the marker a color
+                iconColor: 'white' // give the icon in the marker a color
+              })
+            });
+
+            // declare an empty string variable
+            var popImage = "";
+
+            // if the imageLink is present...
+            if (each.imageLink != undefined) {
+              // define popImage as...
+              var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
+              // otherwise...
+            } else {
+              // make sure it remains an empty string
+              var popImage = "";
+            };
+
+            everyPoint.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+              closeButton: true,
+            });
+            // open on mouseover
+            everyPoint.on('mouseover', function() {
+              everyPoint.openPopup();
+            });
+            // add the layer to the layer group
+            allPoints.addLayer(everyPoint);
+            // *** All of the Points ***
+
             // if the marker is an episcopal church...
             if (each.type == "Episcopal Church") {
               episcopalChurches = L.marker([each.lat, each.long], {
@@ -348,6 +462,55 @@
               };
               // add the layer group to the map
               episcopalLayer.addTo(map);
+            };
+            // if the marker is another place of worship...
+            if (each.type == "Other Place of Worship") {
+              otherPW = L.marker([each.lat, each.long], {
+                icon: L.ExtraMarkers.icon({
+                  icon: 'fas fa-place-of-worship',
+                  prefix: 'fas',
+                  markerColor: 'blue', // give the marker a color
+                  iconColor: 'white' // give the icon in the marker a color
+                })
+              });
+
+              // declare an empty string variable
+              var popImage = "";
+
+              // if the imageLink is present...
+              if (each.imageLink != undefined) {
+                // define popImage as...
+                var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
+                // otherwise...
+              } else {
+                // make sure it remains an empty string
+                var popImage = "";
+              };
+
+              // bind a popup to each marker
+              otherPW.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+                closeButton: true,
+                //maxWidth: 300,
+                //maxHeight: 400,
+              });
+              // open on mouseover
+              otherPW.on('mouseover', function() {
+                otherPW.openPopup();
+              });
+              /*
+                            // close on mouseout
+                            episcopalChurches.on('mouseout', function() {
+                              episcopalChurches.closePopup();
+                            });
+              */
+              // if the currentYear is greater than or equal to the startYear and less than or equal to the endYear
+              if (currentYear >= each.startYear && currentYear <= each.endYear) {
+                otherPWLayer.addLayer(otherPW); // add the layer to the layer group;
+              } else {
+                otherPWLayer.removeLayer(otherPW); // remove the layer from the layer group;
+              };
+              // add the layer group to the map
+              otherPWLayer.addTo(map);
             };
             // if the marker is an event...
             if (each.type == "Event") {
@@ -545,16 +708,65 @@
               // add the layer group to the map
               railLayer.addTo(map);
             };
+            // if the marker is something...
+            if (each.type == "Other") {
+              other = L.marker([each.lat, each.long], {
+                icon: L.ExtraMarkers.icon({
+                  icon: 'fas fa-question-circle',
+                  prefix: 'fas',
+                  markerColor: 'purple', // give the marker a color
+                  iconColor: 'white' // give the icon in the marker a color
+                })
+              });
+
+              // declare an empty string variable
+              var popImage = "";
+
+              // if the imageLink is present...
+              if (each.imageLink != undefined) {
+                // define popImage as...
+                var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
+                // otherwise...
+              } else {
+                // make sure it remains an empty string
+                var popImage = "";
+              };
+
+              // bind a popup to each marker
+              other.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+                closeButton: true,
+                //maxWidth: 300,
+                //maxHeight: 400,
+              });
+              // open on mouseover
+              other.on('mouseover', function() {
+                other.openPopup();
+              });
+              /*
+                            // close on mouseout
+                            episcopalChurches.on('mouseout', function() {
+                              episcopalChurches.closePopup();
+                            });
+              */
+              // if the currentYear is greater than or equal to the startYear and less than or equal to the endYear
+              if (currentYear >= each.startYear && currentYear <= each.endYear) {
+                otherLayer.addLayer(other); // add the layer to the layer group;
+              } else {
+                otherLayer.removeLayer(other); // remove the layer from the layer group;
+              };
+              // add the layer group to the map
+              otherLayer.addTo(map);
+            };
             createTemporalLegend(currentYear);
-            sequenceUI(each, episcopalChurches, eventPoints, peoplePoints, townPoints, railPoints, timeForm); // feeds layers to the time slider
-            updateLayers(each, episcopalChurches, eventPoints, peoplePoints, townPoints, railPoints, currentYear); // updates the layers
+            sequenceUI(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, timeForm); // feeds layers to the time slider
+            updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, currentYear); // updates the layers
           }); // end data.forEach
         }
       });
     });
 
     // add a UI slider
-    function sequenceUI(each, episcopalChurches, eventPoints, peoplePoints, townPoints, railPoints, timeForm) {
+    function sequenceUI(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, timeForm) {
 
       // create Leaflet control for the slider
       const sliderControl = L.control({
@@ -589,7 +801,7 @@
         var currentYear = document.getElementById('year').value; // define currentYear as the submitted year
         $('.slider').val(currentYear); // adjust the time slider to the submitted year
         createTemporalLegend(currentYear); // run this function
-        updateLayers(each, episcopalChurches, eventPoints, peoplePoints, townPoints, railPoints, currentYear); // updates the layers
+        updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, currentYear); // updates the layers
         e.preventDefault(); // prevent defaulting
       });
 
@@ -597,7 +809,7 @@
         .on('input change', function() {
           let currentYear = $(this).val(); // identifies the year selected
           createTemporalLegend(currentYear);
-          updateLayers(each, episcopalChurches, eventPoints, peoplePoints, townPoints, railPoints, currentYear); // updates the layers
+          updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, currentYear); // updates the layers
         });
 
     }; // end sequenceUI function
@@ -630,21 +842,25 @@
     }; // end createTemporalLegend function
 
     // update the layers based on the time slider year
-    function updateLayers(each, episcopalChurches, eventPoints, peoplePoints, townPoints, railPoints, currentYear) {
+    function updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, currentYear) {
 
       // if the currentYear is greater than or equal to the startYear and less than or equal to the endYear
       if (currentYear >= each.startYear && currentYear <= each.endYear) {
         episcopalLayer.addLayer(episcopalChurches); // add the layer to the layer group;
+        otherPWLayer.addLayer(otherPW);
         eventLayer.addLayer(eventPoints);
         peopleLayer.addLayer(peoplePoints);
         townLayer.addLayer(townPoints);
         railLayer.addLayer(railPoints);
+        otherLayer.addLayer(other);
       } else {
         episcopalLayer.removeLayer(episcopalChurches); // remove the layer from the layer group;
+        otherPWLayer.removeLayer(otherPW);
         eventLayer.removeLayer(eventPoints);
         peopleLayer.removeLayer(peoplePoints);
         townLayer.removeLayer(townPoints);
         railLayer.removeLayer(railPoints);
+        otherLayer.removeLayer(other);
       };
 
     }; // end updateLayers function
@@ -1076,6 +1292,7 @@
 
         }; // end updateLayers function
     */
+
   </script>
 </body>
 
