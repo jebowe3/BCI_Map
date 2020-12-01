@@ -1,12 +1,12 @@
-<html lang="en">
+<!DOCTYPE html>
+<html>
 
 <head>
-  <meta charset="utf-8">
   <title>Iowa Points of Interest</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- load leaflet.css library here -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
-  <!-- MAY WANT TO REMOVE!! mapbox assembly css for slider and temporal legend styles -->
-  <link href='https://api.mapbox.com/mapbox-assembly/v0.8.0/assembly.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
   <!--for icon support-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
@@ -15,67 +15,56 @@
   <link rel="stylesheet" href="css/leaflet.extra-markers.min.css">
   <!-- Link to css for the map change button -->
   <link rel="stylesheet" href="css/easy-button.css">
+  <!-- for the collapsible sidebar -->
+  <link rel="stylesheet" href="css/L.Control.Sidebar.css" />
   <!-- add custom css styles here -->
   <style>
-    /* style the body of the page here */
     body {
-      font-family: sans-serif;
-      margin: 0px;
-      height: 100%;
-      width: 100%;
+      padding: 0;
+      margin: 0;
     }
 
-    /* style header */
-    header {
-      position: fixed;
-      top: 12px;
-      left: 35px;
-      width: 260px;
-      height: 50px;
-      background-color: rgba(255, 255, 255, 1.0);
-      box-shadow: 0px 0px 0px 2px rgba(0, 0, 0, 0.2);
-      border-radius: 3px;
-      z-index: 800;
-    }
-
-    #container {
-      margin: 0px;
-      width: 100%;
-    }
-
-    #contentwrapper {
-      float: left;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    #leftcolumn {
-      float: left;
-      width: 23%;
-      background: #FFFFF0;
-      padding: 0px;
-      height: 100%;
-    }
-
-    #contentcolumn {
-      float: left;
-      margin: 0px;
-      width: 77%;
-      margin-bottom: 0px;
-    }
-
-    .innertube {
-      margin: 5px;
-      margin-top: 10px;
-    }
-
+    html,
+    body,
     #map {
-      position: fixed;
-      top: 0px;
-      bottom: 0px;
-      width: 77%;
-      background: white;
-      border-left: 1px solid gray;
+      height: 100%;
+    }
+
+    .lorem {
+      font-style: italic;
+      color: #AAA;
+    }
+
+    body>#sidebar {
+      display: none;
+    }
+
+    #sidebar {
+      background: #FFFFF0;
+      height: 70%;
+    }
+
+    .leaflet-popup-content-wrapper {
+      line-height: 10px;
+      border-radius: 2px;
+      height: 10 px;
+      max-height: 400px;
+      max-width: 350px;
+      overflow: auto;
+    }
+
+    .leaflet-popup {
+      position: absolute;
+      text-align: center;
+    }
+
+    .leaflet-popup-content {
+      min-width: 100 px !important;
+    }
+
+    .resize {
+      width: 300px;
+      height: auto;
     }
 
     /* the text inputs */
@@ -134,18 +123,44 @@
     .leaflet-grab {
       cursor: pointer;
     }
-
-    hr.someClass {
-      width: 100%;
-      height: 6px;
-      border-top: 1px solid black
-    }
   </style>
 </head>
 
 <body>
-  <div id="container">
-    <div id="contentwrapper">
+  <div id="sidebar">
+    <h1>User Added Points</h1>
+
+    <p class="lorem">Use this form to add a point of interest to the map. For latitude and longitude, click on the map to fill in the form. If you know the coordinates, you can also enter these manually. For the year range entry, enter a descriptive range or
+        specific date (ex: 1985, 1920-1929, or May 22, 1990). For start and end years, use the same year for both
+        if the point refers to something that happened in one year. Otherwise, use these entries to define a time span. Upon submission, reload the map to see your point. It may take a few minutes before the changes are logged and your point
+        appears.</p>
+
+    <form name="userInputs">
+      <h3>Type:&nbsp&nbsp</h3><select id="type" name="type">
+        <option value="Event">Event </option>
+        <option value="Person">Person </option>
+        <option value="Episcopal Church">Episcopal Church </option>
+        <option value="Other Place of Worship">Other Place of Worship </option>
+        <option value="Town">Populated Place </option>
+        <option value="Railroad">Railroad </option>
+        <option value="Other">Other</option>
+      </select><br>
+      <h3>Latitude:&nbsp&nbsp</h3><input id="lat" name="lat" type="text" placeholder="42.0"><br>
+      <h3>Longitude:&nbsp&nbsp</h3><input id="long" name="long" type="text" placeholder="-93.5"><br>
+      <h3>Community Name:&nbsp&nbsp</h3><input id="town" name="town" type="text" placeholder="Ames"><br>
+      <h3>Point Name:&nbsp&nbsp</h3><input id="event" name="event" type="text" placeholder="John Doe"><br>
+      <h3>Description:&nbsp&nbsp</h3><textarea id="moreInfo" name="moreInfo" type="text" rows="3" placeholder="On this spot, John Doe did some noteworthy things."></textarea><br>
+      <h3>Year Range:&nbsp&nbsp</h3><input id="year" name="year" type="text" placeholder="1920s"><br>
+      <h3>Start Year:&nbsp&nbsp</h3><input id="startYear" name="startYear" type="text" placeholder="1920"><br>
+      <h3>End Year:&nbsp&nbsp</h3><input id="endYear" name="endYear" type="text" placeholder="1929"><br><br>
+      <div class="centered" style="text-align: center;">
+        <button id="button" type="reset">Reset</button>
+        <button id="button" type="submit">Send</button>
+      </div>
+    </form>
+
+  </div>
+  <!--
       <div id="leftcolumn">
         <div class="innertube">
           <h1><b>User-Added Points</b></h1><br><br>
@@ -177,12 +192,10 @@
           </form>
         </div>
       </div>
-      <div id="contentcolumn">
-        <!-- define a div called "map" here -->
-        <div id="map"></div>
-      </div>
-    </div>
-  </div>
+-->
+  <!-- define a div called "map" here -->
+  <div id="map"></div>
+
   <!-- load leaflet.js library here -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
   <!--d3js for requesting files into web application-->
@@ -203,9 +216,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js "></script>
   <!-- for map change button support -->
   <script src='js/easy-button.js'></script>
+  <!-- for the collapsible sidebar -->
+  <script src="js/L.Control.Sidebar.js"></script>
   <!-- javascript here -->
   <script>
-
     // the location of the form input to google sheet script
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyL7KfWDvjkcCkrp4zomgj9yQNg-y94JLzeMYmuRq9v5WEeHOhb/exec';
     // define the html form on this page
@@ -252,6 +266,30 @@
       position: 'bottomright' // position the scale bar at the bottom-left corner
     }).addTo(map);
 
+    const sidebar = L.control.sidebar('sidebar', {
+      closeButton: true,
+      position: 'left'
+    });
+    map.addControl(sidebar);
+
+    setTimeout(function() {
+      sidebar.show();
+    }, 500);
+
+    // create a button to allow users to expand or collapse the sidebar
+    const toggleSidebarButton = L.easyButton({
+      id: 'toggleSidebarButton',
+      position: 'topleft',
+      states: [{
+        stateName: 'toggle-sidebar',
+        icon: 'fas fa-bookmark',
+        title: 'Toggle Sidebar',
+        onClick: function(e) {
+          sidebar.toggle();
+        }
+      }]
+    }).addTo(map);
+
     // define layer groups
     var episcopalLayer = L.layerGroup();
     var otherPWLayer = L.layerGroup();
@@ -290,7 +328,7 @@
         icon: 'fas fa-undo-alt',
         title: 'Return to Main Map',
         onClick: function(e) {
-          window.location.href = 'index-sidebar.html';
+          window.location.href = 'index.html';
         }
       }]
     }).addTo(map);
@@ -466,112 +504,112 @@
         }
       });
     });
-/*
-        var churchLayer = L.layerGroup();
-        var peopleLayer = L.layerGroup();
-        var townLayer = L.layerGroup();
+    /*
+            var churchLayer = L.layerGroup();
+            var peopleLayer = L.layerGroup();
+            var townLayer = L.layerGroup();
 
-        // define the overlays
-        const overlays = {
-          "Places of Worship": churchLayer,
-          "People": peopleLayer,
-          "Populated Places": townLayer,
-        };
+            // define the overlays
+            const overlays = {
+              "Places of Worship": churchLayer,
+              "People": peopleLayer,
+              "Populated Places": townLayer,
+            };
 
-        // define a layer control and add the overlays
-        const layerControl = L.control.layers(null, overlays, {
-          collapsed: false,
-        }).addTo(map);
+            // define a layer control and add the overlays
+            const layerControl = L.control.layers(null, overlays, {
+              collapsed: false,
+            }).addTo(map);
 
-        // use papaparse to parse the google doc and cors-anywhere to avoid CORS error
-        Papa.parse("https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/1d1BaOwbR9om38Li3L3qvqpWSjZpc5XM4ATT1i1U5qAQ/pub?gid=0&single=true&output=csv", {
-          download: true, // download csv
-          header: true, // make sure it knows the first row is the header
-          // upon completion..
-          complete: function(results) {
-            // define data
-            let data = results.data;
-            // iterate through each row
-            data.forEach(function(each) {
-              // if the user input is a church...
-              if (each.type == "Church") {
-                const userChurches = L.marker([each.lat, each.long], {
-                  icon: L.ExtraMarkers.icon({
-                    icon: 'fas fa-place-of-worship',
-                    prefix: 'fas',
-                    markerColor: 'red', // give the marker a color
-                    iconColor: 'white' // give the icon in the marker a color
-                  })
-                }).addTo(map);
-                // bind a popup to each marker
-                userChurches.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr>" + each.moreInfo, {
-                  closeButton: false
+            // use papaparse to parse the google doc and cors-anywhere to avoid CORS error
+            Papa.parse("https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/1d1BaOwbR9om38Li3L3qvqpWSjZpc5XM4ATT1i1U5qAQ/pub?gid=0&single=true&output=csv", {
+              download: true, // download csv
+              header: true, // make sure it knows the first row is the header
+              // upon completion..
+              complete: function(results) {
+                // define data
+                let data = results.data;
+                // iterate through each row
+                data.forEach(function(each) {
+                  // if the user input is a church...
+                  if (each.type == "Church") {
+                    const userChurches = L.marker([each.lat, each.long], {
+                      icon: L.ExtraMarkers.icon({
+                        icon: 'fas fa-place-of-worship',
+                        prefix: 'fas',
+                        markerColor: 'red', // give the marker a color
+                        iconColor: 'white' // give the icon in the marker a color
+                      })
+                    }).addTo(map);
+                    // bind a popup to each marker
+                    userChurches.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr>" + each.moreInfo, {
+                      closeButton: false
+                    });
+                    // open on mouseover
+                    userChurches.on('mouseover', function() {
+                      userChurches.openPopup();
+                    });
+                    // close on mouseout
+                    userChurches.on('mouseout', function() {
+                      userChurches.closePopup();
+                    });
+                    churchLayer.addLayer(userChurches); // add the layer to the layer group
+                    //layerControl.addOverlay(userChurches, "Places of Worship"); // add the layer to the layer control
+                  };
+                  // if the user input is a person...
+                  if (each.type == "Person") {
+                    const userPeople = L.marker([each.lat, each.long], {
+                      icon: L.ExtraMarkers.icon({
+                        icon: 'fas fa-user-circle',
+                        prefix: 'fas',
+                        markerColor: 'blue', // give the marker a color
+                        iconColor: 'white' // give the icon in the marker a color
+                      })
+                    }).addTo(map);
+                    // bind a popup to each marker
+                    userPeople.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr>" + each.moreInfo, {
+                      closeButton: false
+                    });
+                    // open on mouseover
+                    userPeople.on('mouseover', function() {
+                      userPeople.openPopup();
+                    });
+                    // close on mouseout
+                    userPeople.on('mouseout', function() {
+                      userPeople.closePopup();
+                    });
+                    peopleLayer.addLayer(userPeople); // add the layer to the layer group
+                    //layerControl.addOverlay(userPeople, "People"); // add the layer to the layer control
+                  };
+                  // if the user input is a town...
+                  if (each.type == "Town") {
+                    const userTowns = L.marker([each.lat, each.long], {
+                      icon: L.ExtraMarkers.icon({
+                        icon: 'fas fa-landmark',
+                        prefix: 'fas',
+                        markerColor: 'green', // give the marker a color
+                        iconColor: 'white' // give the icon in the marker a color
+                      })
+                    }).addTo(map);
+                    // bind a popup to each marker
+                    userTowns.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr>" + each.moreInfo, {
+                      closeButton: false
+                    });
+                    // open on mouseover
+                    userTowns.on('mouseover', function() {
+                      userTowns.openPopup();
+                    });
+                    // close on mouseout
+                    userTowns.on('mouseout', function() {
+                      userTowns.closePopup();
+                    });
+                    townLayer.addLayer(userTowns); // add the layer to the layer group
+                    //layerControl.addOverlay(userTowns, "Populated Places"); // add the layer to the layer control
+                  };
                 });
-                // open on mouseover
-                userChurches.on('mouseover', function() {
-                  userChurches.openPopup();
-                });
-                // close on mouseout
-                userChurches.on('mouseout', function() {
-                  userChurches.closePopup();
-                });
-                churchLayer.addLayer(userChurches); // add the layer to the layer group
-                //layerControl.addOverlay(userChurches, "Places of Worship"); // add the layer to the layer control
-              };
-              // if the user input is a person...
-              if (each.type == "Person") {
-                const userPeople = L.marker([each.lat, each.long], {
-                  icon: L.ExtraMarkers.icon({
-                    icon: 'fas fa-user-circle',
-                    prefix: 'fas',
-                    markerColor: 'blue', // give the marker a color
-                    iconColor: 'white' // give the icon in the marker a color
-                  })
-                }).addTo(map);
-                // bind a popup to each marker
-                userPeople.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr>" + each.moreInfo, {
-                  closeButton: false
-                });
-                // open on mouseover
-                userPeople.on('mouseover', function() {
-                  userPeople.openPopup();
-                });
-                // close on mouseout
-                userPeople.on('mouseout', function() {
-                  userPeople.closePopup();
-                });
-                peopleLayer.addLayer(userPeople); // add the layer to the layer group
-                //layerControl.addOverlay(userPeople, "People"); // add the layer to the layer control
-              };
-              // if the user input is a town...
-              if (each.type == "Town") {
-                const userTowns = L.marker([each.lat, each.long], {
-                  icon: L.ExtraMarkers.icon({
-                    icon: 'fas fa-landmark',
-                    prefix: 'fas',
-                    markerColor: 'green', // give the marker a color
-                    iconColor: 'white' // give the icon in the marker a color
-                  })
-                }).addTo(map);
-                // bind a popup to each marker
-                userTowns.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr>" + each.moreInfo, {
-                  closeButton: false
-                });
-                // open on mouseover
-                userTowns.on('mouseover', function() {
-                  userTowns.openPopup();
-                });
-                // close on mouseout
-                userTowns.on('mouseout', function() {
-                  userTowns.closePopup();
-                });
-                townLayer.addLayer(userTowns); // add the layer to the layer group
-                //layerControl.addOverlay(userTowns, "Populated Places"); // add the layer to the layer control
-              };
+              }
             });
-          }
-        });
-    */
+        */
   </script>
 
 </body>
