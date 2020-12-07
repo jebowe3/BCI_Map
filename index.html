@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="css/easy-button.css">
   <!-- for the collapsible sidebar -->
   <link rel="stylesheet" href="css/L.Control.Sidebar.css" />
+  <!-- for the marker clusters -->
+  <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="css/MarkerCluster.css" />
   <!-- add custom css styles here -->
   <style>
     body {
@@ -56,6 +59,11 @@
 
     .leaflet-popup-content {
       min-width: 100 px !important;
+    }
+
+    .logo-resize {
+      width: auto;
+      height: 80px;
     }
 
     .resize {
@@ -140,7 +148,10 @@
 
 <body>
   <div id="sidebar">
-    <h1>Map Name Here</h1>
+    <h1>History of Race in Iowa</h1>
+
+    <!--<img class='resize' src='" + each.imageLink + "'" + "/>-->
+    <img class='logo-resize' src='img/BCI_logo.jpg'/>
 
     <p>A project of the Beloved Community Initiative</p>
 
@@ -215,6 +226,10 @@
   <script src='js/easy-button.js'></script>
   <!-- for the collapsible sidebar -->
   <script src="js/L.Control.Sidebar.js"></script>
+  <!-- root script for the marker clusters -->
+	<script src="js/leaflet.markercluster-src.js"></script>
+  <!-- for the layer control marker clusters -->
+  <script src="js/leaflet.markercluster.layersupport.js"></script>
   <!-- javascript here -->
   <script>
     // map options
@@ -322,6 +337,41 @@
         'fas fa-question-circle';
     };
 
+    // define the clustered layer support
+    var mcgLayerSupportGroup = L.markerClusterGroup.layerSupport(),
+      // define layer groups
+      episcopalLayer = L.layerGroup(),
+      otherPWLayer = L.layerGroup(),
+      eventLayer = L.layerGroup(),
+      peopleLayer = L.layerGroup(),
+      townLayer = L.layerGroup(),
+      railLayer = L.layerGroup(),
+      otherLayer = L.layerGroup(),
+      allPoints = L.layerGroup(),
+      // define the overlays
+      overlays = {
+        "Layers": {
+          "Events": eventLayer,
+          "People": peopleLayer,
+          "Populated Places": townLayer,
+          "Railroads": railLayer,
+          "Other": otherLayer,
+        },
+        "Places of Worship": {
+          "Episcopal Churches": episcopalLayer,
+          "Other Places of Worship": otherPWLayer,
+        },
+        "Everything": {
+          "All Historical Points": allPoints,
+        },
+      },
+      // define the layer control and add the overlays
+      control = L.control.groupedLayers(null, overlays, {
+        collapsed: false,
+      }),
+      i, a, title, marker;
+
+/*
     // define layer groups
     var episcopalLayer = L.layerGroup();
     var otherPWLayer = L.layerGroup();
@@ -354,6 +404,14 @@
     const layerControl = L.control.groupedLayers(null, overlays, {
       collapsed: false,
     }).addTo(map);
+*/
+    // add the clustered layer support to the map
+    mcgLayerSupportGroup.addTo(map);
+    // check in the layer groups
+    mcgLayerSupportGroup.checkIn([episcopalLayer, otherPWLayer, eventLayer, peopleLayer, townLayer, railLayer, otherLayer, allPoints]);
+
+    // add the cluster layer control to the map
+    control.addTo(map);
 
     // create a button to take users to the user input map
     const userInputButton = L.easyButton({
@@ -369,34 +427,36 @@
       }]
     }).addTo(map);
 
+    // define the temporal legend element for visibility toggling
+    const temporalElement = document.getElementById('temporal');
+    // define the time slider element for visibility toggling
+    const sliderElement = document.getElementById('slider');
+    // define the time select element for visibility toggling
+    const timeSelectElement = document.getElementById('time-select');
+
     // if 'All Points' is checked in the layer control...
-    // remove the other layers
+    // remove the other layers and the time controls and legend
     map.on('overlayadd', function(eo) {
-      if (eo.name === 'All Points') {
+      if (eo.name === 'All Historical Points') {
         setTimeout(function() {
-          map.removeLayer(eventLayer)
+          map.removeLayer(eventLayer),
+          map.removeLayer(peopleLayer),
+          map.removeLayer(townLayer),
+          map.removeLayer(railLayer),
+          map.removeLayer(otherLayer),
+          map.removeLayer(episcopalLayer),
+          map.removeLayer(otherPWLayer),
+          sliderElement.style.display = "none",
+          temporalElement.style.display = "none",
+          timeSelectElement.style.display = "none"
         }, 10);
-        setTimeout(function() {
-          map.removeLayer(peopleLayer)
-        }, 10);
-        setTimeout(function() {
-          map.removeLayer(townLayer)
-        }, 10);
-        setTimeout(function() {
-          map.removeLayer(railLayer)
-        }, 10);
-        setTimeout(function() {
-          map.removeLayer(otherLayer)
-        }, 10);
-        setTimeout(function() {
-          map.removeLayer(episcopalLayer)
-        }, 10);
-        setTimeout(function() {
-          map.removeLayer(otherPWLayer)
-        }, 10);
+      // otherwise add them back
       } else {
         setTimeout(function() {
-          map.removeLayer(allPoints)
+          map.removeLayer(allPoints),
+          sliderElement.style.display = "block",
+          temporalElement.style.display = "block",
+          timeSelectElement.style.display = "block"
         }, 10);
       }
     });
