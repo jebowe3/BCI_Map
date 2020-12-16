@@ -156,7 +156,8 @@
 
     <p><b>Choose from the chapters in the following drop-down menu to learn more about Iowa history.</b></p>
 
-    <select class="div-toggle" data-target=".my-info-1">
+    <select id="chapter-select" class="div-toggle" data-target=".my-info-1">
+      <option value="0" selected="selected">[select a chapter]</option>
       <option value="Central" data-show=".central">Central</option>
       <option value="East" data-show=".east">East</option>
       <option value="Metro" data-show=".metro">Metro</option>
@@ -167,21 +168,21 @@
       <option value="Southwest" data-show=".southwest">Southwest</option>
       <option value="Three Rivers" data-show=".threerivers">Three Rivers</option>
       <option value="West" data-show=".west">West</option>
-      <option value="General" data-show=".general">Iowa General</option>
+      <option value="General" data-show=".general">Iowa Other</option>
     </select>
 
-    <div class="my-info-1">
-      <div class="central hide"><p class="lorem">Central content goes here.</p></div>
-      <div class="east hide"><p class="lorem">East content goes here.</p></div>
-      <div class="metro hide"><p class="lorem">Metro content goes here.</p></div>
-      <div class="northcedarvalley hide"><p class="lorem">North Cedar Valley content goes here.</p></div>
-      <div class="northcentral hide"><p class="lorem">North Central content goes here.</p></div>
-      <div class="southcentral hide"><p class="lorem">South Central content goes here.</p></div>
-      <div class="southeast hide"><p class="lorem">Southeast content goes here.</p></div>
-      <div class="southwest hide"><p class="lorem">Southwest content goes here.</p></div>
-      <div class="threerivers hide"><p class="lorem">Three Rivers content goes here.</p></div>
-      <div class="west hide"><p class="lorem">West content goes here.</p></div>
-      <div class="general hide"><p class="lorem">Iowa General content goes here.</p></div>
+    <div id="sidebar-info" class="my-info-1">
+      <div id="central-info" class="central hide"><p class="lorem">Central content goes here.</p></div>
+      <div id="east-info" class="east hide"><p class="lorem">East content goes here.</p></div>
+      <div id="metro-info" class="metro hide"><p class="lorem">Metro content goes here.</p></div>
+      <div id="north-cedar-valley-info" class="northcedarvalley hide"><p class="lorem">North Cedar Valley content goes here.</p></div>
+      <div id="northcentral-info" class="northcentral hide"><p class="lorem">North Central content goes here.</p></div>
+      <div id="southcentral-info" class="southcentral hide"><p class="lorem">South Central content goes here.</p></div>
+      <div id="southeast-info" class="southeast hide"><p class="lorem">Southeast content goes here.</p></div>
+      <div id="southwest-info" class="southwest hide"><p class="lorem">Southwest content goes here.</p></div>
+      <div id="threerivers-info" class="threerivers hide"><p class="lorem">Three Rivers content goes here.</p></div>
+      <div id="west-info" class="west hide"><p class="lorem">West content goes here.</p></div>
+      <div id="other-info" class="general hide"><p class="lorem">Iowa Other content goes here.</p></div>
     </div>
 
   </div>
@@ -435,6 +436,9 @@
     // define the time select element for visibility toggling
     const timeSelectElement = document.getElementById('time-select');
 
+    // define an empty array to hold sidebar content
+    const chapterContent = [];
+
     // if 'All Points' is checked in the layer control...
     // remove the other layers and the time controls and legend
     map.on('overlayadd', function(eo) {
@@ -474,10 +478,145 @@
         header: true,
         // upon completion...
         complete: function(results) {
+
           // define data
           let data = results.data;
+
+          // sort the data by startYear
+          data.sort(function(a,b){
+            // return earliest years first
+            return new Date(a.startYear) - new Date(b.startYear);
+          });
+
+          // define the initial chapter in the dropdown menu
+          const chapterInitial = document.getElementById("chapter-select").value;
+          // define the sidebar information
+          const centralInfo = document.getElementById("central-info");
+          const eastInfo = document.getElementById("east-info");
+          const metroInfo = document.getElementById("metro-info");
+          const northCVInfo = document.getElementById("north-cedar-valley-info");
+          const northCentralInfo = document.getElementById("northcentral-info");
+          const southCentralInfo = document.getElementById("southcentral-info");
+          const southeastInfo = document.getElementById("southeast-info");
+          const southwestInfo = document.getElementById("southwest-info");
+          const threeriversInfo = document.getElementById("threerivers-info");
+          const westInfo = document.getElementById("west-info");
+          const otherInfo = document.getElementById("other-info");
+
+          // when the chapter selection is changed
+          document.getElementById("chapter-select").onchange = function() {
+            // empty the chapterContent array
+            chapterContent.length = 0;
+            // define the selected chapter
+            const chapterSelected = document.getElementById("chapter-select").value;
+            // for each sorted point...
+            data.forEach(function(each) {
+              // if "Central" is selected...
+              if (chapterSelected == "Central") {
+                // add the Central chapter content to the chapterContent array
+                if (each.Chapter == "Central") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                centralInfo.innerHTML = chapterContent.join("");
+              };
+              // if "East" is selected...
+              if (chapterSelected == "East") {
+                // add the East chapter content to the chapterContent array
+                if (each.Chapter == "East") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                eastInfo.innerHTML = chapterContent.join("");
+              };
+              // if "Metro" is selected...
+              if (chapterSelected == "Metro") {
+                // add the Metro chapter content to the chapterContent array
+                if (each.Chapter == "Metro") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                metroInfo.innerHTML = chapterContent.join("");
+              };
+              // if "North Cedar Valley" is selected...
+              if (chapterSelected == "North Cedar Valley") {
+                // add the North Cedar Valley chapter content to the chapterContent array
+                if (each.Chapter == "North Cedar Valley") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                northCVInfo.innerHTML = chapterContent.join("");
+              };
+              // if "North Central" is selected...
+              if (chapterSelected == "North Central") {
+                // add the North Central chapter content to the chapterContent array
+                if (each.Chapter == "North Central") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                northCentralInfo.innerHTML = chapterContent.join("");
+              };
+              // if "South Central" is selected...
+              if (chapterSelected == "South Central") {
+                // add the South Central chapter content to the chapterContent array
+                if (each.Chapter == "South Central") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                southCentralInfo.innerHTML = chapterContent.join("");
+              };
+              // if "Southeast" is selected...
+              if (chapterSelected == "Southeast") {
+                // add the Southeast chapter content to the chapterContent array
+                if (each.Chapter == "Southeast") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                southeastInfo.innerHTML = chapterContent.join("");
+              };
+              // if "Southwest" is selected...
+              if (chapterSelected == "Southwest") {
+                // add the Southwest chapter content to the chapterContent array
+                if (each.Chapter == "Southwest") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                southwestInfo.innerHTML = chapterContent.join("");
+              };
+
+              // if "Three Rivers" is selected...
+              if (chapterSelected == "Three Rivers") {
+                // add the Three Rivers chapter content to the chapterContent array
+                if (each.Chapter == "Three Rivers") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                threeriversInfo.innerHTML = chapterContent.join("");
+              };
+              // if "West" is selected...
+              if (chapterSelected == "West") {
+                // add the West chapter content to the chapterContent array
+                if (each.Chapter == "West") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                westInfo.innerHTML = chapterContent.join("");
+              };
+              // if "Other" is selected...
+              if (chapterSelected == "General") {
+                // add the Other chapter content to the chapterContent array
+                if (each.Chapter == "-") {
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                };
+                // redefine the div
+                otherInfo.innerHTML = chapterContent.join("");
+              };
+            });
+          };
+
           // iterate through each row
           data.forEach(function(each) {
+
             // declare empty markers to be updated with later conditions
             let episcopalChurches = L.marker([each.lat, each.long], {
               icon: L.ExtraMarkers.icon({
