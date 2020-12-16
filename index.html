@@ -143,6 +143,10 @@
     .hide {
       display: none;
     }
+
+    .story:hover{
+      color: blue;
+    }
   </style>
 </head>
 
@@ -154,7 +158,7 @@
 
     <p>A project of the Beloved Community Initiative</p>
 
-    <p><b>Choose from the chapters in the following drop-down menu to learn more about Iowa history.</b></p>
+    <p><b>Choose from the chapters in the following drop-down menu to learn more about Iowa history. Hover over the text to zoom to the location of the event.</b></p>
 
     <select id="chapter-select" class="div-toggle" data-target=".my-info-1">
       <option value="0" selected="selected">[select a chapter]</option>
@@ -612,6 +616,19 @@
                 otherInfo.innerHTML = chapterContent.join("");
               };
             });
+
+            // bind click event to the story divs, add a marker and zoom to that story's location. Remember to add dot before story as it is classname
+            $('.story').on('mouseover', function(){
+
+                // parse lat and lng from the divs data attribute
+                var latlng = $(this).data().point.split(',');
+                var lat = latlng[0];
+                var lng = latlng[1];
+                var zoom = 12;
+
+                // set the view
+                map.setView([lat, lng], zoom);
+            })
           };
 
           // iterate through each row
