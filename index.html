@@ -176,6 +176,7 @@
         <option value="West" data-show=".west">West</option>
         <option value="General" data-show=".general">Iowa Other</option>
       </select>
+<!-- COMMENT OUT TYPE FILTER
       <br>
       <select id="type-select" class="div-toggle" data-target=".my-info-2">
         <option value="0" selected="selected">[select the type]</option>
@@ -185,7 +186,7 @@
         <option value="Railroad" data-show=".railroad">Railroad</option>
         <option value="Town" data-show=".town">Town</option>
       </select>
-
+-->
       <div class="centered">
         <button id="formsubmit" type="submit" value="apply">Apply Query</button>
       </div>
@@ -540,129 +541,156 @@
             // empty the chapterContent array
             chapterContent.length = 0;
           };
-
+/* COMMENT OUT TYPE SELECTION FUNCTION
           // when the type selection is changed
           document.getElementById("type-select").onchange = function() {
             // empty the chapterContent array
             chapterContent.length = 0;
           };
-
+*/
           // when the form is submitted...
           document.getElementById('map_parameters').addEventListener('submit', function updateData(e) {
 
             // define the selected chapter
             const chapterSelected = document.getElementById("chapter-select").value;
-
+/* COMMENT OUT TYPE SELECTION VALUE CONSTANT
             // define the selected type
             const typeSelected = document.getElementById("type-select").value;
-
+*/
             // prevent page reload
             e.preventDefault();
 
             // for each sorted point...
             data.forEach(function(each) {
 
+              // declare an empty string variable
+              var popImage = "";
+
+              // if the imageLink is present...
+              if (each.imageLink != undefined) {
+                // define popImage as...
+                var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
+                // define the image link
+                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
+                // otherwise...
+              } else {
+                // make sure it remains an empty string
+                var popImage = "";
+                var imgLink = "";
+              };
+
               // CHAPTER SELECTIONS
               // if "Central" is selected...
-              if (chapterSelected == "Central" && typeSelected == "0") {
+              if (chapterSelected == "Central") {
+              // if (chapterSelected == "Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Central chapter content to the chapterContent array
                 if (each.Chapter == "Central") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "East" is selected...
-              if (chapterSelected == "East" && typeSelected == "0") {
+              if (chapterSelected == "East") {
+              //if (chapterSelected == "East" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the East chapter content to the chapterContent array
                 if (each.Chapter == "East") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "Metro" is selected...
-              if (chapterSelected == "Metro" && typeSelected == "0") {
+              if (chapterSelected == "Metro") {
+              //if (chapterSelected == "Metro" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Metro chapter content to the chapterContent array
                 if (each.Chapter == "Metro") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "North Cedar Valley" is selected...
-              if (chapterSelected == "North Cedar Valley" && typeSelected == "0") {
+              if (chapterSelected == "North Cedar Valley") {
+              //if (chapterSelected == "North Cedar Valley" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the North Cedar Valley chapter content to the chapterContent array
                 if (each.Chapter == "North Cedar Valley") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "North Central" is selected...
-              if (chapterSelected == "North Central" && typeSelected == "0") {
+              if (chapterSelected == "North Central") {
+              //if (chapterSelected == "North Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the North Central chapter content to the chapterContent array
                 if (each.Chapter == "North Central") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "South Central" is selected...
-              if (chapterSelected == "South Central" && typeSelected == "0") {
+              if (chapterSelected == "South Central") {
+              //if (chapterSelected == "South Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the South Central chapter content to the chapterContent array
                 if (each.Chapter == "South Central") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "Southeast" is selected...
-              if (chapterSelected == "Southeast" && typeSelected == "0") {
+              if (chapterSelected == "Southeast") {
+              //if (chapterSelected == "Southeast" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Southeast chapter content to the chapterContent array
                 if (each.Chapter == "Southeast") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "Southwest" is selected...
-              if (chapterSelected == "Southwest" && typeSelected == "0") {
+              if (chapterSelected == "Southwest") {
+              //if (chapterSelected == "Southwest" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Southwest chapter content to the chapterContent array
                 if (each.Chapter == "Southwest") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "Three Rivers" is selected...
-              if (chapterSelected == "Three Rivers" && typeSelected == "0") {
+              if (chapterSelected == "Three Rivers") {
+              //if (chapterSelected == "Three Rivers" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Three Rivers chapter content to the chapterContent array
                 if (each.Chapter == "Three Rivers") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "West" is selected...
-              if (chapterSelected == "West" && typeSelected == "0") {
+              if (chapterSelected == "West") {
+              //if (chapterSelected == "West" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the West chapter content to the chapterContent array
                 if (each.Chapter == "West") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
               // if "Other" is selected...
-              if (chapterSelected == "General" && typeSelected == "0") {
+              if (chapterSelected == "General") {
+              //if (chapterSelected == "General" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Other chapter content to the chapterContent array
                 if (each.Chapter == "General") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
-
+/* COMMENT OUT TYPE AND MULTIPLE SELECTIONS
               // TYPE SELECTIONS
               // if "Episcopal Church" is selected...
               if (typeSelected == "Episcopal Church" && chapterSelected == "0") {
@@ -1206,11 +1234,17 @@
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
-
+*/
               document.getElementById("content-info").style.display = "block";
 
               // bind mouseover event to the story divs, add a marker and zoom to that story's location. Remember to add dot before story as it is classname
-              $('.story').on('mouseover', function(){
+              $('.story').on('click', function(){
+                var popText1 = $(this)[0].innerHTML.substring(4);
+                var popTextType = popText1.split(',')[0].substring(3);
+                var popTextPlace = popText1.split(',')[1].substring(1) + ", Iowa";
+                var popTextYear = popText1.split(',')[2].substring(1,5);
+                var popTextInfo = popText1.split('</b><br>')[1];
+                var popText = "<b>" + popTextPlace + ", " + popTextYear + ":</b><br>" + popTextType + "<hr class='lineClass'>" + popTextInfo;
 
                   // parse lat and lng from the divs data attribute
                   var latlng = $(this).data().point.split(',');
@@ -1220,8 +1254,13 @@
 
                   // set the view
                   map.setView([lat, lng], zoom);
-              })
 
+                  var popup = L.popup({offset: [1, -25]})
+                    .setLatLng([lat, lng])
+                    .setContent(popText)
+                    .openOn(map);
+
+              });
             });
 
           });
@@ -1551,7 +1590,7 @@
               // define popImage as...
               var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
               // define the image link
-              var imgLink = "Image source: " + each.imageLink;
+              var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
               // otherwise...
             } else {
               // make sure it remains an empty string
@@ -1591,7 +1630,7 @@
                 // define popImage as...
                 var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
                 // define the image link
-                var imgLink = "Image source: " + each.imageLink;
+                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
                 // otherwise...
               } else {
                 // make sure it remains an empty string
@@ -1643,7 +1682,7 @@
                 // define popImage as...
                 var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
                 // define the image link
-                var imgLink = "Image source: " + each.imageLink;
+                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
                 // otherwise...
               } else {
                 // make sure it remains an empty string
@@ -1695,7 +1734,7 @@
                 // define popImage as...
                 var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
                 // define the image link
-                var imgLink = "Image source: " + each.imageLink;
+                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
                 // otherwise...
               } else {
                 // make sure it remains an empty string
@@ -1747,7 +1786,7 @@
                 // define popImage as...
                 var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
                 // define the image link
-                var imgLink = "Image source: " + each.imageLink;
+                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
                 // otherwise...
               } else {
                 // make sure it remains an empty string
@@ -1799,7 +1838,7 @@
                 // define popImage as...
                 var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
                 // define the image link
-                var imgLink = "Image source: " + each.imageLink;
+                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
                 // otherwise...
               } else {
                 // make sure it remains an empty string
@@ -1851,7 +1890,7 @@
                 // define popImage as...
                 var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
                 // define the image link
-                var imgLink = "Image source: " + each.imageLink;
+                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
                 // otherwise...
               } else {
                 // make sure it remains an empty string
@@ -1903,7 +1942,7 @@
                 // define popImage as...
                 var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
                 // define the image link
-                var imgLink = "Image source: " + each.imageLink;
+                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
                 // otherwise...
               } else {
                 // make sure it remains an empty string
