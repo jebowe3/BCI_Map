@@ -158,12 +158,12 @@
 
     <p>A project of the Beloved Community Initiative</p>
 
-    <p><b>Choose from the chapters, types, or any combination of the two in the following drop-down menus to learn more about Iowa history. Hover over the text to zoom to the location of the event.</b></p>
+    <p><b>Choose from the regions in the drop-down menu to learn more about Iowa history. Click on the text to zoom to the location of the event.</b></p>
 
     <form id="map_parameters" name="map_parameters" action="#" accept-charset="utf-8" class="inlineForm">
 
       <select id="chapter-select" class="div-toggle" data-target=".my-info-1">
-        <option value="0" selected="selected">[select a chapter]</option>
+        <option value="0" selected="selected">[select a region]</option>
         <option value="Central" data-show=".central">Central</option>
         <option value="East" data-show=".east">East</option>
         <option value="Metro" data-show=".metro">Metro</option>
@@ -186,11 +186,11 @@
         <option value="Railroad" data-show=".railroad">Railroad</option>
         <option value="Town" data-show=".town">Town</option>
       </select>
--->
+
       <div class="centered">
         <button id="formsubmit" type="submit" value="apply">Apply Query</button>
       </div>
-
+-->
     </form>
 
     <div id="sidebar-info" class="my-info-1">
@@ -537,10 +537,10 @@
           // REWRITE THE FILTERING FROM HERE
 
           // when the chapter selection is changed
-          document.getElementById("chapter-select").onchange = function() {
+          //document.getElementById("chapter-select").onchange = function() {
             // empty the chapterContent array
-            chapterContent.length = 0;
-          };
+            //chapterContent.length = 0;
+          //};
 /* COMMENT OUT TYPE SELECTION FUNCTION
           // when the type selection is changed
           document.getElementById("type-select").onchange = function() {
@@ -549,7 +549,11 @@
           };
 */
           // when the form is submitted...
-          document.getElementById('map_parameters').addEventListener('submit', function updateData(e) {
+          //document.getElementById('map_parameters').addEventListener('submit', function updateData(e) {
+          // when the chapter selection is changed
+          document.getElementById("chapter-select").onchange = function(e) {
+            // empty the chapterContent array
+            chapterContent.length = 0;
 
             // define the selected chapter
             const chapterSelected = document.getElementById("chapter-select").value;
@@ -1267,7 +1271,7 @@
               });
             });
 
-          });
+          };
           // END FILTERING
 
 /*
