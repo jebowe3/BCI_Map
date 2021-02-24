@@ -563,29 +563,33 @@
             // for each sorted point...
             data.forEach(function(each) {
 
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
-                // define the image link
-                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
-                var imgLink = "";
+                var imgContent = "";
               };
 
-              // CHAPTER SELECTIONS
-              // if "Central" is selected...
               if (chapterSelected == "Central") {
               // if (chapterSelected == "Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Central chapter content to the chapterContent array
                 if (each.Chapter == "Central") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -595,7 +599,7 @@
               //if (chapterSelected == "East" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the East chapter content to the chapterContent array
                 if (each.Chapter == "East") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -605,7 +609,7 @@
               //if (chapterSelected == "Metro" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Metro chapter content to the chapterContent array
                 if (each.Chapter == "Metro") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -615,7 +619,7 @@
               //if (chapterSelected == "North Cedar Valley" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the North Cedar Valley chapter content to the chapterContent array
                 if (each.Chapter == "North Cedar Valley") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -625,7 +629,7 @@
               //if (chapterSelected == "North Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the North Central chapter content to the chapterContent array
                 if (each.Chapter == "North Central") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -635,7 +639,7 @@
               //if (chapterSelected == "South Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the South Central chapter content to the chapterContent array
                 if (each.Chapter == "South Central") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -645,7 +649,7 @@
               //if (chapterSelected == "Southeast" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Southeast chapter content to the chapterContent array
                 if (each.Chapter == "Southeast") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -655,7 +659,7 @@
               //if (chapterSelected == "Southwest" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Southwest chapter content to the chapterContent array
                 if (each.Chapter == "Southwest") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -665,7 +669,7 @@
               //if (chapterSelected == "Three Rivers" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Three Rivers chapter content to the chapterContent array
                 if (each.Chapter == "Three Rivers") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -675,7 +679,7 @@
               //if (chapterSelected == "West" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the West chapter content to the chapterContent array
                 if (each.Chapter == "West") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -685,7 +689,7 @@
               //if (chapterSelected == "General" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Other chapter content to the chapterContent array
                 if (each.Chapter == "General") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + popImage + "<br>" + imgLink + "</div>");
+                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
                 };
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
@@ -1582,23 +1586,29 @@
               })
             });
 
-            // declare an empty string variable
-            var popImage = "";
+            var imageLink = each.imageLink;
+            imageLink = imageLink || undefined;
 
-            // if the imageLink is present...
-            if (each.imageLink != undefined) {
-              // define popImage as...
-              var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
-              // define the image link
-              var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
-              // otherwise...
+            var imageLink2 = each.imageLink2;
+            imageLink2 = imageLink2 || undefined;
+
+            var imageLink3 = each.imageLink3;
+            imageLink3 = imageLink3 || undefined;
+
+            if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+              var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+              "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+              "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+            } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+              var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+              "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+            } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+              var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
             } else {
-              // make sure it remains an empty string
-              var popImage = "";
-              var imgLink = "";
+              var imgContent = "";
             };
 
-            everyPoint.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + popImage + "<br>" + imgLink, {
+            everyPoint.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + imgContent, {
               closeButton: true,
             });
             // open on mouseover
@@ -1622,24 +1632,30 @@
                 })
               });
 
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
-                // define the image link
-                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
-                var imgLink = "";
+                var imgContent = "";
               };
 
               // bind a popup to each marker
-              episcopalChurches.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + popImage + "<br>" + imgLink, {
+              episcopalChurches.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + imgContent, {
                 closeButton: true,
                 //maxWidth: 300,
                 //maxHeight: 400,
@@ -1674,24 +1690,30 @@
                 })
               });
 
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
-                // define the image link
-                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
-                var imgLink = "";
+                var imgContent = "";
               };
 
               // bind a popup to each marker
-              otherPW.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + popImage + "<br>" + imgLink, {
+              otherPW.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + imgContent, {
                 closeButton: true,
                 //maxWidth: 300,
                 //maxHeight: 400,
@@ -1726,24 +1748,30 @@
                 })
               });
 
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
-                // define the image link
-                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
-                var imgLink = "";
+                var imgContent = "";
               };
 
               // bind a popup to each marker
-              eventPoints.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + popImage + "<br>" + imgLink, {
+              eventPoints.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + imgContent, {
                 closeButton: true,
                 //maxWidth: 300,
                 //maxHeight: 400,
@@ -1778,24 +1806,30 @@
                 })
               });
 
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
-                // define the image link
-                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
-                var imgLink = "";
+                var imgContent = "";
               };
 
               // bind a popup to each marker
-              peoplePoints.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + popImage + "<br>" + imgLink, {
+              peoplePoints.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + imgContent, {
                 closeButton: true,
                 //maxWidth: 300,
                 //maxHeight: 400,
@@ -1830,24 +1864,30 @@
                 })
               });
 
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
-                // define the image link
-                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
-                var imgLink = "";
+                var imgContent = "";
               };
 
               // bind a popup to each marker
-              townPoints.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + popImage + "<br>" + imgLink, {
+              townPoints.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + imgContent, {
                 closeButton: true,
                 //maxWidth: 300,
                 //maxHeight: 400,
@@ -1882,24 +1922,30 @@
                 })
               });
 
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
-                // define the image link
-                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
-                var imgLink = "";
+                var imgContent = "";
               };
 
               // bind a popup to each marker
-              railPoints.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + popImage + "<br>" + imgLink, {
+              railPoints.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + imgContent, {
                 closeButton: true,
                 //maxWidth: 300,
                 //maxHeight: 400,
@@ -1934,24 +1980,30 @@
                 })
               });
 
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img class='resize' src='" + each.imageLink + "'" + "/>";
-                // define the image link
-                var imgLink = 'Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.';
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
-                var imgLink = "";
+                var imgContent = "";
               };
 
               // bind a popup to each marker
-              other.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + popImage + "<br>" + imgLink, {
+              other.bindPopup("<b>" + each.town + ", Iowa, " + each.startYear + ":</b><br> " + each.event + "<hr class='lineClass'>" + each.moreInfo + imgContent, {
                 closeButton: true,
                 //maxWidth: 300,
                 //maxHeight: 400,
