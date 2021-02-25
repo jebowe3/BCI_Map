@@ -161,15 +161,12 @@
   <div id="sidebar">
     <h1>User Added Points</h1>
 
-    <p class="lorem">Add a point of interest to the map. For latitude and longitude,
-        click a location on the map. If you know the coordinates, you can enter
-        these manually. For the year range, enter a descriptive range or specific
-        date (ex: 1985, 1920-1929, or May 22, 1990). For start and end years, use
-        the same year if the point refers to something that happened in one year,
-        or use these entries to define a time span. Upon submission, reload the
+    <p class="lorem">To add a point of interest, click a location on the map or
+        enter the coordinates manually. For the year range, enter using the following
+        format: 1920-1929. If the point refers to something that happened in one
+        year, just type the relevant year (ex: 1925). Upon submission, reload the
         map. It may take a few minutes before the changes are logged and your point
-        appears. Once we verify your information, it will be added to the main map.</p>
-
+        appears. Once verified, it will be added to the main map.</p>
     <form name="userInputs">
       <h3>Type:&nbsp&nbsp</h3><select id="type" name="type">
         <option value="Event">Event </option>
@@ -185,10 +182,12 @@
       <h3>Community Name:&nbsp&nbsp</h3><input id="town" name="town" class="inputText" type="text" placeholder="Ames"><br>
       <h3>Point Name:&nbsp&nbsp</h3><input id="event" name="event" class="inputText" type="text" placeholder="John Doe"><br>
       <h3>Description:&nbsp&nbsp</h3><textarea id="moreInfo" name="moreInfo" class="inputText" type="text" rows="3" placeholder="On this spot, John Doe did some noteworthy things."></textarea><br>
-      <h3>Year Range:&nbsp&nbsp</h3><input id="year" name="year" class="inputText" type="text" placeholder="1920s"><br>
+      <h3>Year Range:&nbsp&nbsp</h3><input id="year" name="year" class="inputText" type="text" placeholder="1920-1929; 1942"><br>
       <h3>Start Year:&nbsp&nbsp</h3><input id="startYear" name="startYear" class="inputText" type="text" placeholder="1920"><br>
       <h3>End Year:&nbsp&nbsp</h3><input id="endYear" name="endYear" class="inputText" type="text" placeholder="1929"><br>
-      <h3>Image Link:&nbsp&nbsp</h3><input id="imageLink" name="imageLink" class="inputText" type="text" placeholder="https://upload.wikimedia.org/wikipedia/commons/a/aa/Flag_of_Iowa.svg"><br><br>
+      <h3>First Image Link:&nbsp&nbsp</h3><input id="imageLink" name="imageLink" class="inputText" type="text" placeholder="https://upload.wikimedia.org/wikipedia/commons/a/aa/Flag_of_Iowa.svg"><br>
+      <h3>Second Image Link:&nbsp&nbsp</h3><input id="imageLink2" name="imageLink2" class="inputText" type="text" placeholder="https://upload.wikimedia.org/wikipedia/commons/a/aa/Flag_of_Iowa.svg"><br>
+      <h3>Third Image Link:&nbsp&nbsp</h3><input id="imageLink3" name="imageLink3" class="inputText" type="text" placeholder="https://upload.wikimedia.org/wikipedia/commons/a/aa/Flag_of_Iowa.svg"><br><br>
       <div class="centered" style="text-align: center;">
         <button id="button" type="reset">Reset</button>
         <button id="button" type="submit">Send</button>
@@ -287,6 +286,22 @@
     map.on('click', function(e) {
       document.getElementById("lat").value = e.latlng.lat;
       document.getElementById("long").value = e.latlng.lng;
+    });
+
+    // when the user adds a year range...
+    document.getElementById("year").addEventListener('change', (event) => {
+      // if it includes a dash...
+      if (document.getElementById("year").value.includes("-")) {
+        // use the first year as the start year
+        document.getElementById("startYear").value = parseInt(document.getElementById("year").value.split("-")[0]);
+        // use the second year as the end year
+        document.getElementById("endYear").value = parseInt(document.getElementById("year").value.split("-")[1]);
+        // otherwise...
+      } else {
+        // set both the start and end years to the same value
+        document.getElementById("startYear").value = document.getElementById("year").value;
+        document.getElementById("endYear").value = document.getElementById("year").value;
+      }
     });
 
     // use the Jawg Sunny base map - nice, clean, not fussy
@@ -396,20 +411,29 @@
                   iconColor: 'white' // give the icon in the marker a color
                 })
               });
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
+                var imgContent = "";
               };
               // bind a popup to each marker
-              userEvents.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+              userEvents.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + imgContent, {
                 closeButton: true
               });
               // open on mouseover
@@ -429,20 +453,29 @@
                   iconColor: 'white' // give the icon in the marker a color
                 })
               });
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
+                var imgContent = "";
               };
               // bind a popup to each marker
-              userPeople.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+              userPeople.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + imgContent, {
                 closeButton: true
               });
               // open on mouseover
@@ -463,20 +496,29 @@
                   iconColor: 'white' // give the icon in the marker a color
                 })
               });
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
+                var imgContent = "";
               };
               // bind a popup to each marker
-              userEpiscopal.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+              userEpiscopal.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + imgContent, {
                 closeButton: true
               });
               // open on mouseover
@@ -497,20 +539,29 @@
                   iconColor: 'white' // give the icon in the marker a color
                 })
               });
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
+                var imgContent = "";
               };
               // bind a popup to each marker
-              userOtherPW.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+              userOtherPW.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + imgContent, {
                 closeButton: true
               });
               // open on mouseover
@@ -531,20 +582,29 @@
                   iconColor: 'white' // give the icon in the marker a color
                 })
               });
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
+                var imgContent = "";
               };
               // bind a popup to each marker
-              userTowns.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+              userTowns.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + imgContent, {
                 closeButton: true
               });
               // open on mouseover
@@ -565,20 +625,29 @@
                   iconColor: 'white' // give the icon in the marker a color
                 })
               });
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
+                var imgContent = "";
               };
               // bind a popup to each marker
-              userRails.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+              userRails.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + imgContent, {
                 closeButton: true
               });
               // open on mouseover
@@ -598,20 +667,29 @@
                   iconColor: 'white' // give the icon in the marker a color
                 })
               });
-              // declare an empty string variable
-              var popImage = "";
+              var imageLink = each.imageLink;
+              imageLink = imageLink || undefined;
 
-              // if the imageLink is present...
-              if (each.imageLink != undefined) {
-                // define popImage as...
-                var popImage = "<br><img src='" + each.imageLink + "'" + "/>";
-                // otherwise...
+              var imageLink2 = each.imageLink2;
+              imageLink2 = imageLink2 || undefined;
+
+              var imageLink3 = each.imageLink3;
+              imageLink3 = imageLink3 || undefined;
+
+              if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+              } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
+                var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
-                // make sure it remains an empty string
-                var popImage = "";
+                var imgContent = "";
               };
               // bind a popup to each marker
-              userOther.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + popImage, {
+              userOther.bindPopup("<b>" + each.town + ", Iowa, " + each.year + ":</b><br> " + each.event + "<hr class='someClass'>" + each.moreInfo + imgContent, {
                 closeButton: true
               });
               // open on mouseover
