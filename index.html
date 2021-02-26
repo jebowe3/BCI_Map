@@ -21,6 +21,8 @@
   <!-- for the marker clusters -->
   <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
   <link rel="stylesheet" href="css/MarkerCluster.css" />
+  <!--for search button-->
+  <link rel='stylesheet' href='css/leaflet-search.css'>
   <!-- add custom css styles here -->
   <style>
     body {
@@ -144,7 +146,7 @@
       display: none;
     }
 
-    .story:hover{
+    .story:hover {
       color: blue;
     }
   </style>
@@ -154,7 +156,7 @@
   <div id="sidebar">
     <h1>History of Race in Iowa</h1>
 
-    <a href="https://becomingbelovedcommunity.org/" target="_blank"><img class='logo-resize' src='img/BCI_logo.jpg'/></a>
+    <a href="https://becomingbelovedcommunity.org/" target="_blank"><img class='logo-resize' src='img/BCI_logo.jpg' /></a>
 
     <p>A project of the Beloved Community Initiative</p>
 
@@ -176,7 +178,7 @@
         <option value="West" data-show=".west">West</option>
         <option value="General" data-show=".general">Iowa Other</option>
       </select>
-<!-- COMMENT OUT TYPE FILTER
+      <!-- COMMENT OUT TYPE FILTER
       <br>
       <select id="type-select" class="div-toggle" data-target=".my-info-2">
         <option value="0" selected="selected">[select the type]</option>
@@ -194,9 +196,11 @@
     </form>
 
     <div id="sidebar-info" class="my-info-1">
-      <div id="content-info" class="contentinfo hide"><p class="lorem">Apply some filters to see descriptive content.</p></div>
+      <div id="content-info" class="contentinfo hide">
+        <p class="lorem">Apply some filters to see descriptive content.</p>
+      </div>
     </div>
-<!--
+    <!--
     <div id="sidebar-info" class="my-info-1">
       <div id="central-info" class="central hide"><p class="lorem">Central content goes here.</p></div>
       <div id="east-info" class="east hide"><p class="lorem">East content goes here.</p></div>
@@ -256,9 +260,11 @@
   <!-- for the collapsible sidebar -->
   <script src="js/L.Control.Sidebar.js"></script>
   <!-- root script for the marker clusters -->
-	<script src="js/leaflet.markercluster-src.js"></script>
+  <script src="js/leaflet.markercluster-src.js"></script>
   <!-- for the layer control marker clusters -->
   <script src="js/leaflet.markercluster.layersupport.js"></script>
+  <!--for search button-->
+  <script src="js/leaflet-search.js"></script>
   <!-- javascript here -->
   <script>
     // map options
@@ -295,7 +301,7 @@
     }
 
     timeSelect.addTo(map); // add the temporal legend to the map
-
+/*
     // use the Jawg Sunny base map - nice, clean, not fussy
     L.tileLayer('https://{s}.tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=odaScIS8yTVoAy0mjYBoHMXXasRTvbpjrTyjwQiZutN3FU3WE82xJ6FyqbbglesB', {
       attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -304,6 +310,13 @@
       subdomains: 'abcd',
       accessToken: 'odaScIS8yTVoAy0mjYBoHMXXasRTvbpjrTyjwQiZutN3FU3WE82xJ6FyqbbglesB'
     }).addTo(map); // add the base map to the map;
+*/
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      minZoom: 0,
+      maxZoom: 22,
+    }).addTo(map);
 
     // add a scale bar
     L.control.scale({
@@ -340,8 +353,8 @@
       $(target).children().addClass('hide');
       $(show).removeClass('hide');
     });
-    $(document).ready(function(){
-        $('.div-toggle').trigger('change');
+    $(document).ready(function() {
+      $('.div-toggle').trigger('change');
     });
 
     function getColor(d) {
@@ -400,40 +413,40 @@
       }),
       i, a, title, marker;
 
-/*
-    // define layer groups
-    var episcopalLayer = L.layerGroup();
-    var otherPWLayer = L.layerGroup();
-    var eventLayer = L.layerGroup();
-    var peopleLayer = L.layerGroup();
-    var townLayer = L.layerGroup();
-    var railLayer = L.layerGroup();
-    var otherLayer = L.layerGroup();
-    var allPoints = L.layerGroup();
+    /*
+        // define layer groups
+        var episcopalLayer = L.layerGroup();
+        var otherPWLayer = L.layerGroup();
+        var eventLayer = L.layerGroup();
+        var peopleLayer = L.layerGroup();
+        var townLayer = L.layerGroup();
+        var railLayer = L.layerGroup();
+        var otherLayer = L.layerGroup();
+        var allPoints = L.layerGroup();
 
-    // define the overlays
-    const overlays = {
-      "Layers": {
-        "Events": eventLayer,
-        "People": peopleLayer,
-        "Populated Places": townLayer,
-        "Railroads": railLayer,
-        "Other": otherLayer,
-      },
-      "Places of Worship": {
-        "Episcopal Churches": episcopalLayer,
-        "Other Places of Worship": otherPWLayer,
-      },
-      "Everything": {
-        "All Points": allPoints,
-      },
-    };
+        // define the overlays
+        const overlays = {
+          "Layers": {
+            "Events": eventLayer,
+            "People": peopleLayer,
+            "Populated Places": townLayer,
+            "Railroads": railLayer,
+            "Other": otherLayer,
+          },
+          "Places of Worship": {
+            "Episcopal Churches": episcopalLayer,
+            "Other Places of Worship": otherPWLayer,
+          },
+          "Everything": {
+            "All Points": allPoints,
+          },
+        };
 
-    // define a layer control and add the overlays
-    const layerControl = L.control.groupedLayers(null, overlays, {
-      collapsed: false,
-    }).addTo(map);
-*/
+        // define a layer control and add the overlays
+        const layerControl = L.control.groupedLayers(null, overlays, {
+          collapsed: false,
+        }).addTo(map);
+    */
     // add the clustered layer support to the map
     mcgLayerSupportGroup.addTo(map);
     // check in the layer groups you want to cluster
@@ -473,26 +486,38 @@
       if (eo.name === 'All Historical Points') {
         setTimeout(function() {
           map.removeLayer(eventLayer),
-          map.removeLayer(peopleLayer),
-          map.removeLayer(townLayer),
-          map.removeLayer(railLayer),
-          map.removeLayer(otherLayer),
-          map.removeLayer(episcopalLayer),
-          map.removeLayer(otherPWLayer),
-          sliderElement.style.display = "none",
-          temporalElement.style.display = "none",
-          timeSelectElement.style.display = "none"
+            map.removeLayer(peopleLayer),
+            map.removeLayer(townLayer),
+            map.removeLayer(railLayer),
+            map.removeLayer(otherLayer),
+            map.removeLayer(episcopalLayer),
+            map.removeLayer(otherPWLayer),
+            sliderElement.style.display = "none",
+            temporalElement.style.display = "none",
+            timeSelectElement.style.display = "none"
         }, 10);
-      // otherwise add them back
+        // otherwise add them back
       } else {
         setTimeout(function() {
           map.removeLayer(allPoints),
-          sliderElement.style.display = "block",
-          temporalElement.style.display = "block",
-          timeSelectElement.style.display = "block"
+            sliderElement.style.display = "block",
+            temporalElement.style.display = "block",
+            timeSelectElement.style.display = "block"
         }, 10);
       }
     });
+
+    // add search control to map
+    L.control.search({
+    		layer: allPoints,
+    		initial: false,
+    		propertyName: 'event',
+    		buildTip: function(text, val) {
+    			var type = val.layer.feature.properties.event;
+    			return '<b>'+type+'</b>';
+    		}
+    	})
+    	.addTo(map);
 
     // retrieve the google sheet
     $.getJSON(
@@ -511,7 +536,7 @@
           let data = results.data;
 
           // sort the data by startYear
-          data.sort(function(a,b){
+          data.sort(function(a, b) {
             // return earliest years first
             return new Date(a.startYear) - new Date(b.startYear);
           });
@@ -521,33 +546,33 @@
           // define the sidebar information
           const info = document.getElementById("content-info");
 
-/*
-          const centralInfo = document.getElementById("central-info");
-          const eastInfo = document.getElementById("east-info");
-          const metroInfo = document.getElementById("metro-info");
-          const northCVInfo = document.getElementById("north-cedar-valley-info");
-          const northCentralInfo = document.getElementById("northcentral-info");
-          const southCentralInfo = document.getElementById("southcentral-info");
-          const southeastInfo = document.getElementById("southeast-info");
-          const southwestInfo = document.getElementById("southwest-info");
-          const threeriversInfo = document.getElementById("threerivers-info");
-          const westInfo = document.getElementById("west-info");
-          const otherInfo = document.getElementById("other-info");
-*/
+          /*
+                    const centralInfo = document.getElementById("central-info");
+                    const eastInfo = document.getElementById("east-info");
+                    const metroInfo = document.getElementById("metro-info");
+                    const northCVInfo = document.getElementById("north-cedar-valley-info");
+                    const northCentralInfo = document.getElementById("northcentral-info");
+                    const southCentralInfo = document.getElementById("southcentral-info");
+                    const southeastInfo = document.getElementById("southeast-info");
+                    const southwestInfo = document.getElementById("southwest-info");
+                    const threeriversInfo = document.getElementById("threerivers-info");
+                    const westInfo = document.getElementById("west-info");
+                    const otherInfo = document.getElementById("other-info");
+          */
           // REWRITE THE FILTERING FROM HERE
 
           // when the chapter selection is changed
           //document.getElementById("chapter-select").onchange = function() {
-            // empty the chapterContent array
-            //chapterContent.length = 0;
+          // empty the chapterContent array
+          //chapterContent.length = 0;
           //};
-/* COMMENT OUT TYPE SELECTION FUNCTION
-          // when the type selection is changed
-          document.getElementById("type-select").onchange = function() {
-            // empty the chapterContent array
-            chapterContent.length = 0;
-          };
-*/
+          /* COMMENT OUT TYPE SELECTION FUNCTION
+                    // when the type selection is changed
+                    document.getElementById("type-select").onchange = function() {
+                      // empty the chapterContent array
+                      chapterContent.length = 0;
+                    };
+          */
           // when the form is submitted...
           //document.getElementById('map_parameters').addEventListener('submit', function updateData(e) {
           // when the chapter selection is changed
@@ -557,10 +582,10 @@
 
             // define the selected chapter
             const chapterSelected = document.getElementById("chapter-select").value;
-/* COMMENT OUT TYPE SELECTION VALUE CONSTANT
-            // define the selected type
-            const typeSelected = document.getElementById("type-select").value;
-*/
+            /* COMMENT OUT TYPE SELECTION VALUE CONSTANT
+                        // define the selected type
+                        const typeSelected = document.getElementById("type-select").value;
+            */
             // prevent page reload
             e.preventDefault();
 
@@ -578,11 +603,11 @@
 
               if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                  "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
@@ -590,7 +615,7 @@
               };
 
               if (chapterSelected == "Central") {
-              // if (chapterSelected == "Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                // if (chapterSelected == "Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Central chapter content to the chapterContent array
                 if (each.Chapter == "Central") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -600,7 +625,7 @@
               };
               // if "East" is selected...
               if (chapterSelected == "East") {
-              //if (chapterSelected == "East" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "East" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the East chapter content to the chapterContent array
                 if (each.Chapter == "East") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -610,7 +635,7 @@
               };
               // if "Metro" is selected...
               if (chapterSelected == "Metro") {
-              //if (chapterSelected == "Metro" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "Metro" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Metro chapter content to the chapterContent array
                 if (each.Chapter == "Metro") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -620,7 +645,7 @@
               };
               // if "North Cedar Valley" is selected...
               if (chapterSelected == "North Cedar Valley") {
-              //if (chapterSelected == "North Cedar Valley" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "North Cedar Valley" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the North Cedar Valley chapter content to the chapterContent array
                 if (each.Chapter == "North Cedar Valley") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -630,7 +655,7 @@
               };
               // if "North Central" is selected...
               if (chapterSelected == "North Central") {
-              //if (chapterSelected == "North Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "North Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the North Central chapter content to the chapterContent array
                 if (each.Chapter == "North Central") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -640,7 +665,7 @@
               };
               // if "South Central" is selected...
               if (chapterSelected == "South Central") {
-              //if (chapterSelected == "South Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "South Central" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the South Central chapter content to the chapterContent array
                 if (each.Chapter == "South Central") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -650,7 +675,7 @@
               };
               // if "Southeast" is selected...
               if (chapterSelected == "Southeast") {
-              //if (chapterSelected == "Southeast" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "Southeast" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Southeast chapter content to the chapterContent array
                 if (each.Chapter == "Southeast") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -660,7 +685,7 @@
               };
               // if "Southwest" is selected...
               if (chapterSelected == "Southwest") {
-              //if (chapterSelected == "Southwest" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "Southwest" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Southwest chapter content to the chapterContent array
                 if (each.Chapter == "Southwest") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -670,7 +695,7 @@
               };
               // if "Three Rivers" is selected...
               if (chapterSelected == "Three Rivers") {
-              //if (chapterSelected == "Three Rivers" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "Three Rivers" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Three Rivers chapter content to the chapterContent array
                 if (each.Chapter == "Three Rivers") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -680,7 +705,7 @@
               };
               // if "West" is selected...
               if (chapterSelected == "West") {
-              //if (chapterSelected == "West" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "West" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the West chapter content to the chapterContent array
                 if (each.Chapter == "West") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -690,7 +715,7 @@
               };
               // if "Other" is selected...
               if (chapterSelected == "General") {
-              //if (chapterSelected == "General" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
+                //if (chapterSelected == "General" && typeSelected == "0") { // COMMENT OUT TYPE SELECTION CONDITION
                 // add the Other chapter content to the chapterContent array
                 if (each.Chapter == "General") {
                   chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + imgContent + "</div>");
@@ -698,575 +723,33 @@
                 // redefine the div
                 info.innerHTML = chapterContent.join("");
               };
-/* COMMENT OUT TYPE AND MULTIPLE SELECTIONS
-              // TYPE SELECTIONS
-              // if "Episcopal Church" is selected...
-              if (typeSelected == "Episcopal Church" && chapterSelected == "0") {
-                // add the Episcopal Church content to the chapterContent array
-                if (each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Event" is selected...
-              if (typeSelected == "Event" && chapterSelected == "0") {
-                // add the Event content to the chapterContent array
-                if (each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Person" is selected...
-              if (typeSelected == "Person" && chapterSelected == "0") {
-                // add the Person content to the chapterContent array
-                if (each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Railroad" is selected...
-              if (typeSelected == "Railroad" && chapterSelected == "0") {
-                // add the Railroad content to the chapterContent array
-                if (each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Town" is selected...
-              if (typeSelected == "Town" && chapterSelected == "0") {
-                // add the Town content to the chapterContent array
-                if (each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
 
-              // MULTIPLE SELECTIONS
-              // if "Central" and "Episcopal Church" are selected...
-              if (chapterSelected == "Central" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Central" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Central" and "Event" are selected...
-              if (chapterSelected == "Central" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Central" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Central" and "Person" are selected...
-              if (chapterSelected == "Central" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Central" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Central" and "Railroad" are selected...
-              if (chapterSelected == "Central" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Central" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Central" and "Town" are selected...
-              if (chapterSelected == "Central" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Central" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "East" and "Episcopal Church" are selected...
-              if (chapterSelected == "East" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "East" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "East" and "Event" are selected...
-              if (chapterSelected == "East" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "East" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "East" and "Person" are selected...
-              if (chapterSelected == "East" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "East" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "East" and "Railroad" are selected...
-              if (chapterSelected == "East" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "East" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "East" and "Town" are selected...
-              if (chapterSelected == "East" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "East" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Metro" and "Episcopal Church" are selected...
-              if (chapterSelected == "Metro" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Metro" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Metro" and "Event" are selected...
-              if (chapterSelected == "Metro" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Metro" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Metro" and "Person" are selected...
-              if (chapterSelected == "Metro" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Metro" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Metro" and "Railroad" are selected...
-              if (chapterSelected == "Metro" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Metro" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Metro" and "Town" are selected...
-              if (chapterSelected == "Metro" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Metro" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Cedar Valley" and "Episcopal Church" are selected...
-              if (chapterSelected == "North Cedar Valley" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Cedar Valley" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Cedar Valley" and "Event" are selected...
-              if (chapterSelected == "North Cedar Valley" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Cedar Valley" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Cedar Valley" and "Person" are selected...
-              if (chapterSelected == "North Cedar Valley" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Cedar Valley" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Cedar Valley" and "Railroad" are selected...
-              if (chapterSelected == "North Cedar Valley" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Cedar Valley" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Cedar Valley" and "Town" are selected...
-              if (chapterSelected == "North Cedar Valley" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Cedar Valley" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Central" and "Episcopal Church" are selected...
-              if (chapterSelected == "North Central" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Central" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Central" and "Event" are selected...
-              if (chapterSelected == "North Central" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Central" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Central" and "Person" are selected...
-              if (chapterSelected == "North Central" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Central" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Central" and "Railroad" are selected...
-              if (chapterSelected == "North Central" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Central" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "North Central" and "Town" are selected...
-              if (chapterSelected == "North Central" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "North Central" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "South Central" and "Episcopal Church" are selected...
-              if (chapterSelected == "South Central" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "South Central" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "South Central" and "Event" are selected...
-              if (chapterSelected == "South Central" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "South Central" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "South Central" and "Person" are selected...
-              if (chapterSelected == "South Central" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "South Central" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "South Central" and "Railroad" are selected...
-              if (chapterSelected == "South Central" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "South Central" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "South Central" and "Town" are selected...
-              if (chapterSelected == "South Central" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "South Central" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southeast" and "Episcopal Church" are selected...
-              if (chapterSelected == "Southeast" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southeast" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southeast" and "Event" are selected...
-              if (chapterSelected == "Southeast" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southeast" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southeast" and "Person" are selected...
-              if (chapterSelected == "Southeast" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southeast" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southeast" and "Railroad" are selected...
-              if (chapterSelected == "Southeast" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southeast" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southeast" and "Town" are selected...
-              if (chapterSelected == "Southeast" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southeast" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southwest" and "Episcopal Church" are selected...
-              if (chapterSelected == "Southwest" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southwest" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southwest" and "Event" are selected...
-              if (chapterSelected == "Southwest" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southwest" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southwest" and "Person" are selected...
-              if (chapterSelected == "Southwest" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southwest" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southwest" and "Railroad" are selected...
-              if (chapterSelected == "Southwest" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southwest" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Southwest" and "Town" are selected...
-              if (chapterSelected == "Southwest" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Southwest" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Three Rivers" and "Episcopal Church" are selected...
-              if (chapterSelected == "Three Rivers" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Three Rivers" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Three Rivers" and "Event" are selected...
-              if (chapterSelected == "Three Rivers" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Three Rivers" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Three Rivers" and "Person" are selected...
-              if (chapterSelected == "Three Rivers" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Three Rivers" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Three Rivers" and "Railroad" are selected...
-              if (chapterSelected == "Three Rivers" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Three Rivers" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Three Rivers" and "Town" are selected...
-              if (chapterSelected == "Three Rivers" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "Three Rivers" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "West" and "Episcopal Church" are selected...
-              if (chapterSelected == "West" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "West" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "West" and "Event" are selected...
-              if (chapterSelected == "West" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "West" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "West" and "Person" are selected...
-              if (chapterSelected == "West" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "West" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "West" and "Railroad" are selected...
-              if (chapterSelected == "West" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "West" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "West" and "Town" are selected...
-              if (chapterSelected == "West" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "West" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "General" and "Episcopal Church" are selected...
-              if (chapterSelected == "General" && typeSelected == "Episcopal Church") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "General" && each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "General" and "Event" are selected...
-              if (chapterSelected == "General" && typeSelected == "Event") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "General" && each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "General" and "Person" are selected...
-              if (chapterSelected == "General" && typeSelected == "Person") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "General" && each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "General" and "Railroad" are selected...
-              if (chapterSelected == "General" && typeSelected == "Railroad") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "General" && each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "General" and "Town" are selected...
-              if (chapterSelected == "General" && typeSelected == "Town") {
-                // add the content to the chapterContent array
-                if (each.Chapter == "General" && each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-*/
               document.getElementById("content-info").style.display = "block";
 
               // bind mouseover event to the story divs, add a marker and zoom to that story's location. Remember to add dot before story as it is classname
-              $('.story').on('click', function(){
+              $('.story').on('click', function() {
                 var popText1 = $(this)[0].innerHTML.substring(4);
                 var popTextType = popText1.split(',')[0].substring(3);
                 var popTextPlace = popText1.split(',')[1].substring(1) + ", Iowa";
-                var popTextYear = popText1.split(',')[2].substring(1,5);
+                var popTextYear = popText1.split(',')[2].substring(1, 5);
                 var popTextInfo = popText1.split('</b><br>')[1];
                 var popText = "<b>" + popTextPlace + ", " + popTextYear + ":</b><br>" + popTextType + "<hr class='lineClass'>" + popTextInfo;
 
-                  // parse lat and lng from the divs data attribute
-                  var latlng = $(this).data().point.split(',');
-                  var lat = latlng[0];
-                  var lng = latlng[1];
-                  var zoom = 12;
+                // parse lat and lng from the divs data attribute
+                var latlng = $(this).data().point.split(',');
+                var lat = latlng[0];
+                var lng = latlng[1];
+                var zoom = 12;
 
-                  // set the view
-                  map.setView([lat, lng], zoom);
+                // set the view
+                map.setView([lat, lng], zoom);
 
-                  var popup = L.popup({offset: [1, -25]})
-                    .setLatLng([lat, lng])
-                    .setContent(popText)
-                    .openOn(map);
+                var popup = L.popup({
+                    offset: [1, -25]
+                  })
+                  .setLatLng([lat, lng])
+                  .setContent(popText)
+                  .openOn(map);
 
               });
             });
@@ -1274,237 +757,6 @@
           };
           // END FILTERING
 
-/*
-          // when the chapter selection is changed
-          document.getElementById("chapter-select").onchange = function() {
-            // empty the chapterContent array
-            chapterContent.length = 0;
-            // define the selected chapter
-            const chapterSelected = document.getElementById("chapter-select").value;
-            // for each sorted point...
-            data.forEach(function(each) {
-              // if "Central" is selected...
-              if (chapterSelected == "Central") {
-                // add the Central chapter content to the chapterContent array
-                if (each.Chapter == "Central") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //centralInfo.innerHTML = chapterContent.join("");
-              };
-              // if "East" is selected...
-              if (chapterSelected == "East") {
-                // add the East chapter content to the chapterContent array
-                if (each.Chapter == "East") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //eastInfo.innerHTML = chapterContent.join("");
-              };
-              // if "Metro" is selected...
-              if (chapterSelected == "Metro") {
-                // add the Metro chapter content to the chapterContent array
-                if (each.Chapter == "Metro") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //metroInfo.innerHTML = chapterContent.join("");
-              };
-              // if "North Cedar Valley" is selected...
-              if (chapterSelected == "North Cedar Valley") {
-                // add the North Cedar Valley chapter content to the chapterContent array
-                if (each.Chapter == "North Cedar Valley") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //northCVInfo.innerHTML = chapterContent.join("");
-              };
-              // if "North Central" is selected...
-              if (chapterSelected == "North Central") {
-                // add the North Central chapter content to the chapterContent array
-                if (each.Chapter == "North Central") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //northCentralInfo.innerHTML = chapterContent.join("");
-              };
-              // if "South Central" is selected...
-              if (chapterSelected == "South Central") {
-                // add the South Central chapter content to the chapterContent array
-                if (each.Chapter == "South Central") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //southCentralInfo.innerHTML = chapterContent.join("");
-              };
-              // if "Southeast" is selected...
-              if (chapterSelected == "Southeast") {
-                // add the Southeast chapter content to the chapterContent array
-                if (each.Chapter == "Southeast") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //southeastInfo.innerHTML = chapterContent.join("");
-              };
-              // if "Southwest" is selected...
-              if (chapterSelected == "Southwest") {
-                // add the Southwest chapter content to the chapterContent array
-                if (each.Chapter == "Southwest") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //southwestInfo.innerHTML = chapterContent.join("");
-              };
-
-              // if "Three Rivers" is selected...
-              if (chapterSelected == "Three Rivers") {
-                // add the Three Rivers chapter content to the chapterContent array
-                if (each.Chapter == "Three Rivers") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //threeriversInfo.innerHTML = chapterContent.join("");
-              };
-              // if "West" is selected...
-              if (chapterSelected == "West") {
-                // add the West chapter content to the chapterContent array
-                if (each.Chapter == "West") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //westInfo.innerHTML = chapterContent.join("");
-              };
-              // if "Other" is selected...
-              if (chapterSelected == "General") {
-                // add the Other chapter content to the chapterContent array
-                if (each.Chapter == "General") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-                //otherInfo.innerHTML = chapterContent.join("");
-              };
-
-            });
-
-            document.getElementById("content-info").style.display = "block";
-
-            // bind click event to the story divs, add a marker and zoom to that story's location. Remember to add dot before story as it is classname
-            $('.story').on('mouseover', function(){
-
-                // parse lat and lng from the divs data attribute
-                var latlng = $(this).data().point.split(',');
-                var lat = latlng[0];
-                var lng = latlng[1];
-                var zoom = 12;
-
-                // set the view
-                map.setView([lat, lng], zoom);
-            })
-          };
-*/
-/*
-          // when the type selection is changed
-          document.getElementById("type-select").onchange = function() {
-
-            console.log(document.getElementById("chapter-select").value);
-            // empty the chapterContent array
-            chapterContent.length = 0;
-
-            if (each.Chapter == chapterSelected && each.type == typeSelected) {
-
-              console.log("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-
-              // add the content to the chapterContent array
-              chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-              // redefine the div
-              info.innerHTML = chapterContent.join("");
-            };
-          };
-
-          // when the type selection is changed
-          document.getElementById("type-select").onchange = function() {
-            // empty the chapterContent array
-            chapterContent.length = 0;
-            // define the selected chapter
-            const chapterSelected = document.getElementById("chapter-select").value;
-            // define the selected type
-            const typeSelected = document.getElementById("type-select").value;
-            // for each sorted point...
-            data.forEach(function(each) {
-              // if "Episcopal Church" is selected...
-              if (typeSelected == "Episcopal Church") {
-                // add the Episcopal Church content to the chapterContent array
-                if (each.type == "Episcopal Church") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Event" is selected...
-              if (typeSelected == "Event") {
-                // add the Event content to the chapterContent array
-                if (each.type == "Event") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Person" is selected...
-              if (typeSelected == "Person") {
-                // add the Person content to the chapterContent array
-                if (each.type == "Person") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Railroad" is selected...
-              if (typeSelected == "Railroad") {
-                // add the Railroad content to the chapterContent array
-                if (each.type == "Railroad") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-              // if "Town" is selected...
-              if (typeSelected == "Town") {
-                // add the Town content to the chapterContent array
-                if (each.type == "Town") {
-                  chapterContent.push("<div class='story' data-point='" + each.lat + "," + each.long + "'><br><b>" + each.event + ", " + each.town + ", " + each.startYear + "</b><br>" + each.moreInfo + "</div>");
-                };
-                // redefine the div
-                info.innerHTML = chapterContent.join("");
-              };
-            });
-
-            document.getElementById("content-info").style.display = "block";
-
-            // bind click event to the story divs, add a marker and zoom to that story's location. Remember to add dot before story as it is classname
-            $('.story').on('mouseover', function(){
-
-                // parse lat and lng from the divs data attribute
-                var latlng = $(this).data().point.split(',');
-                var lat = latlng[0];
-                var lng = latlng[1];
-                var zoom = 12;
-
-                // set the view
-                map.setView([lat, lng], zoom);
-            })
-          };
-*/
           // iterate through each row
           data.forEach(function(each) {
 
@@ -1590,6 +842,19 @@
               })
             });
 
+            // For the SEARCH TOOL... define features for everyPoint using each.event and each.long, each.lat
+            everyPoint.feature = {
+              type: 'Point',
+              properties: { event: each.event },
+              geometry: {
+                "type": "Point",
+                "coordinates": [
+                  each.long,
+                  each.lat
+                ]
+              }
+            };
+
             var imageLink = each.imageLink;
             imageLink = imageLink || undefined;
 
@@ -1601,11 +866,11 @@
 
             if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
               var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-              "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
-              "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
             } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
               var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-              "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
             } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
               var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
             } else {
@@ -1647,11 +912,11 @@
 
               if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                  "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
@@ -1705,11 +970,11 @@
 
               if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                  "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
@@ -1763,11 +1028,11 @@
 
               if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                  "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
@@ -1821,11 +1086,11 @@
 
               if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                  "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
@@ -1879,11 +1144,11 @@
 
               if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                  "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
@@ -1937,11 +1202,11 @@
 
               if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                  "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
@@ -1995,11 +1260,11 @@
 
               if (imageLink != undefined && imageLink2 != undefined && imageLink3 != undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>' +
+                  "<img class='resize' src='" + each.imageLink3 + "'" + "/>" + '<br>Click <a href="' + each.imageLink3 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 != undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>' +
-                "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
+                  "<img class='resize' src='" + each.imageLink2 + "'" + "/>" + '<br>Click <a href="' + each.imageLink2 + '" target="_blank">here</a> to visit the image source.<br>';
               } else if (imageLink != undefined && imageLink2 === undefined && imageLink3 === undefined) {
                 var imgContent = "<br><img class='resize' src='" + each.imageLink + "'" + "/>" + '<br>Click <a href="' + each.imageLink + '" target="_blank">here</a> to visit the image source.<br>';
               } else {
@@ -2138,6 +1403,7 @@
       };
 
     }; // end updateLayers function
+
   </script>
 </body>
 
