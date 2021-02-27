@@ -507,17 +507,29 @@
       }
     });
 
-    // add search control to map
-    L.control.search({
+    // define the search control
+    var searchControl = L.control.search({
     		layer: allPoints,
+        zoom: 17,
     		initial: false,
     		propertyName: 'event',
     		buildTip: function(text, val) {
     			var type = val.layer.feature.properties.event;
     			return '<b>'+type+'</b>';
     		}
-    	})
-    	.addTo(map);
+    	});
+
+      // when the location is found...
+      searchControl.on('search:locationfound', function(e, feature) {
+        // zoom to the correct marker in the clustered markers and...
+        mcgLayerSupportGroup.zoomToShowLayer(e.layer, function() {
+          // open its popup
+          e.layer.openPopup();
+        });
+      });
+
+      // add search control to map
+    	map.addControl(searchControl);
 
     // retrieve the google sheet
     $.getJSON(

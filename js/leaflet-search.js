@@ -68,7 +68,7 @@ L.Control.Search = L.Control.extend({
 		moveToLocation: null,			//callback run on location found, params: latlng, title, map
 		buildTip: null,					//function to return row tip html node(or html string), receive text tooltip in first param
 		container: '',					//container id to insert Search Control
-		zoom: 17,						//default zoom level for move to location
+		zoom: null,						//default zoom level for move to location
 		minLength: 1,					//minimal text length for autocomplete
 		initial: true,					//search elements only by initial text
 		casesensitive: false,			//search elements in case sensitive text
