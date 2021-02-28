@@ -4,7 +4,7 @@
 <head>
   <title>Iowa Points of Interest</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
 
   <!-- load leaflet.css library here -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.2/dist/leaflet.css" />
@@ -853,8 +853,6 @@
                 iconColor: 'white' // give the icon in the marker a color
               })
             });
-
-            //console.log(each.town + ", Iowa, " + each.year + ": " + each.event);
 
             // For the SEARCH TOOL... define features for everyPoint using each.event and each.long, each.lat
             everyPoint.feature = {
