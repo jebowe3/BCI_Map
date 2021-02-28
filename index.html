@@ -854,10 +854,12 @@
               })
             });
 
+            //console.log(each.town + ", Iowa, " + each.year + ": " + each.event);
+
             // For the SEARCH TOOL... define features for everyPoint using each.event and each.long, each.lat
             everyPoint.feature = {
               type: 'Point',
-              properties: { event: each.event },
+              properties: { event: each.town + ", Iowa, " + each.year + ": " + each.event },
               geometry: {
                 "type": "Point",
                 "coordinates": [
