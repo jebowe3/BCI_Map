@@ -494,7 +494,8 @@
             map.removeLayer(otherPWLayer),
             sliderElement.style.display = "none",
             temporalElement.style.display = "none",
-            timeSelectElement.style.display = "none"
+            timeSelectElement.style.display = "none",
+            sidebar.show();
         }, 10);
         // otherwise add them back
       } else {
@@ -502,7 +503,8 @@
           map.removeLayer(allPoints),
             sliderElement.style.display = "block",
             temporalElement.style.display = "block",
-            timeSelectElement.style.display = "block"
+            timeSelectElement.style.display = "block",
+            sidebar.hide();
         }, 10);
       }
     });
