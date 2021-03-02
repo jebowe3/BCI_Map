@@ -34,6 +34,7 @@
     body,
     #map {
       height: 100%;
+      width: 100%;
     }
 
     .lorem {
@@ -532,6 +533,9 @@
 
       // add search control to map
     	map.addControl(searchControl);
+
+      // fit the map to the following bounds
+      map.fitBounds([[43.6,-90.0],[40.3,-96.7]]);
 
     // retrieve the google sheet
     $.getJSON(
