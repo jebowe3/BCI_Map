@@ -6,9 +6,9 @@
 
   <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
   <!-- load leaflet.css library here -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.2/dist/leaflet.css" />
   <!-- mapbox assembly css to match main map styles -->
-  <link href='https://api.mapbox.com/mapbox-assembly/v0.8.0/assembly.min.css' rel='stylesheet'>
+  <!--<link href='https://api.mapbox.com/mapbox-assembly/v0.8.0/assembly.min.css' rel='stylesheet'>-->
   <!--for icon support-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
@@ -43,7 +43,7 @@
     }
 
     #sidebar {
-      background: #FFFFF0;
+      /*background: #FFFFF0;*/
       height: 70%;
     }
 
@@ -151,7 +151,7 @@
     }
 
     .inputText {
-      height:25px;
+      height:15px;
       font-size: 12px;
     }
 
@@ -161,7 +161,6 @@
 <body>
   <div id="sidebar">
     <h1>User Added Points</h1>
-
     <p class="lorem">To add a point of interest, click a location on the map or
         enter the coordinates manually. For the year range, enter using the following
         format: 1920-1929. If the point refers to something that happened in one
@@ -194,7 +193,6 @@
         <button id="button" type="submit">Send</button>
       </div>
     </form>
-
   </div>
   <!--
       <div id="leftcolumn">
@@ -257,6 +255,7 @@
   <script src="js/L.Control.Sidebar.js"></script>
   <!-- javascript here -->
   <script>
+
     // the location of the form input to google sheet script
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyL7KfWDvjkcCkrp4zomgj9yQNg-y94JLzeMYmuRq9v5WEeHOhb/exec';
     // define the html form on this page
