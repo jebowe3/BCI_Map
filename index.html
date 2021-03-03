@@ -150,6 +150,31 @@
     .story:hover {
       color: blue;
     }
+
+    @media (max-width: 767px) {
+
+      h1 {
+        font-size: 20px;
+      }
+
+      p {
+        font-size: 10px;
+      }
+
+      .leaflet-popup-content-wrapper {
+        line-height: 10px;
+        border-radius: 2px;
+        height: 10 px;
+        max-height: 200px;
+        max-width: 250px;
+        overflow: auto;
+      }
+
+      .leaflet-popup-content {
+        max-width: 200px !important;
+      }
+
+    }
   </style>
 </head>
 
@@ -179,7 +204,7 @@
         <option value="West" data-show=".west">West</option>
         <option value="General" data-show=".general">Iowa Other</option>
       </select>
-      <!-- COMMENT OUT TYPE FILTER
+<!-- COMMENT OUT TYPE FILTER
       <br>
       <select id="type-select" class="div-toggle" data-target=".my-info-2">
         <option value="0" selected="selected">[select the type]</option>
@@ -201,7 +226,7 @@
         <p class="lorem">Apply some filters to see descriptive content.</p>
       </div>
     </div>
-    <!--
+<!--
     <div id="sidebar-info" class="my-info-1">
       <div id="central-info" class="central hide"><p class="lorem">Central content goes here.</p></div>
       <div id="east-info" class="east hide"><p class="lorem">East content goes here.</p></div>
@@ -393,18 +418,18 @@
       allPoints = L.layerGroup(),
       // define the overlays
       overlays = {
-        "Layers": {
+        "<b>Layers</b>": {
           "Events": eventLayer,
           "People": peopleLayer,
           "Populated Places": townLayer,
           "Railroads": railLayer,
           "Other": otherLayer,
         },
-        "Places of Worship": {
+        "<b>Places of Worship</b>": {
           "Episcopal Churches": episcopalLayer,
           "Other Places of Worship": otherPWLayer,
         },
-        "Everything": {
+        "<b>Everything</b>": {
           "All Historical Points": allPoints,
         },
       },
