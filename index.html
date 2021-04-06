@@ -993,7 +993,9 @@
                             });
               */
               // if the currentYear is greater than or equal to the startYear and less than or equal to the endYear
-              if (currentYear >= each.startYear && currentYear <= each.endYear) {
+              //if (currentYear >= each.startYear && currentYear <= each.endYear) {
+              // if the currentYear is greater than or equal to the startYear
+              if (currentYear >= each.startYear) {
                 episcopalLayer.addLayer(episcopalChurches); // add the layer to the layer group;
               } else {
                 episcopalLayer.removeLayer(episcopalChurches); // remove the layer from the layer group;
@@ -1436,18 +1438,23 @@
     // update the layers based on the time slider year
     function updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, currentYear) {
 
+      // for Episcopal churches, keep all markers on the map as long as the startYear is less than or equal to the currentYear
+      if (currentYear >= each.startYear) {
+        episcopalLayer.addLayer(episcopalChurches);
+      } else {
+        episcopalLayer.removeLayer(episcopalChurches);
+      }
+
       // if the currentYear is greater than or equal to the startYear and less than or equal to the endYear
       if (currentYear >= each.startYear && currentYear <= each.endYear) {
-        episcopalLayer.addLayer(episcopalChurches); // add the layer to the layer group;
-        otherPWLayer.addLayer(otherPW);
+        otherPWLayer.addLayer(otherPW); // add the layer to the layer group;
         eventLayer.addLayer(eventPoints);
         peopleLayer.addLayer(peoplePoints);
         townLayer.addLayer(townPoints);
         railLayer.addLayer(railPoints);
         otherLayer.addLayer(other);
       } else {
-        episcopalLayer.removeLayer(episcopalChurches); // remove the layer from the layer group;
-        otherPWLayer.removeLayer(otherPW);
+        otherPWLayer.removeLayer(otherPW); // remove the layer from the layer group;
         eventLayer.removeLayer(eventPoints);
         peopleLayer.removeLayer(peoplePoints);
         townLayer.removeLayer(townPoints);
