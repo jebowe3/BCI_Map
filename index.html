@@ -254,7 +254,7 @@
   <!-- end temporal -->
   <!-- ui slider -->
   <div id='slider' class='leaflet-slider'>
-    <input type='range' min="1400" max="2020" value="1400" step="1" class="slide-bar" />
+    <input type='range' min="1400" max="2020" value="2020" step="1" class="slide-bar" id="myRange"/>
   </div>
   <!-- end slider -->
   <!-- time select control -->
@@ -293,6 +293,16 @@
   <script src="js/leaflet-search.js"></script>
   <!-- javascript here -->
   <script>
+
+    // Define the present year dynamically
+    const presentYear = new Date().getFullYear();
+
+    // Dynamically redefine the maximum year in the timeslider range with the present year
+    document.getElementById("myRange").max = presentYear;
+
+    // Dynamically redefine the default year (value) in the timeslider with the present year
+    document.getElementById("myRange").value = presentYear;
+
     // map options
     const options = {
       center: [42, -93], // center on Iowa
