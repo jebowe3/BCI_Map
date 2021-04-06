@@ -898,7 +898,7 @@
             // For the SEARCH TOOL... define features for everyPoint using each.event and each.long, each.lat
             everyPoint.feature = {
               type: 'Point',
-              properties: { event: each.town + ", Iowa, " + each.year + ": " + each.event },
+              properties: { event: each.town + ", Iowa, " + each.year + ": " + each.event + " - Info: " + each.moreInfo },
               geometry: {
                 "type": "Point",
                 "coordinates": [
