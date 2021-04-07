@@ -552,7 +552,7 @@
     		initial: false,
     		propertyName: 'event',
     		buildTip: function(text, val) {
-    			var type = val.layer.feature.properties.event;
+    			var type = val.layer.feature.properties.event.split(' - Info: ')[0];
     			return '<b>'+type+'</b>';
     		}
     	});
