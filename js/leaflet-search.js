@@ -799,10 +799,11 @@ L.Control.Search = L.Control.extend({
 
 			this._input.style.maxWidth = maxWidth.toString() + 'px';
 		}
-
+/* I COMMENTED OUT THIS TO PREVENT THE SEARCH BAR FROM RESIZING TO THE LENGTH OF INPUT TEXT AFTER SEARCHING -- JAY BOWEN (jaybowen@uiowa.edu), 4/7/2021
 		if (this.options.autoResize && (this._container.offsetWidth + 20 < this._map._container.offsetWidth)) {
 			this._input.size = this._input.value.length < this._inputMinSize ? this._inputMinSize : this._input.value.length;
 		}
+*/
 	},
 
 	_handleArrowSelect: function(velocity) {
