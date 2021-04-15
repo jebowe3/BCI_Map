@@ -399,7 +399,7 @@
         d === "Event" ? 'orange' :
         d === "Person" ? 'blue' :
         d === "Town" ? 'green' :
-        d === "Railroad" ? 'purple' :
+        //d === "Railroad" ? 'purple' :
         d === "Other" ? 'purple' :
         'blue';
     };
@@ -410,7 +410,7 @@
         d === "Event" ? 'fas fa-calendar-day' :
         d === "Person" ? 'fas fa-user-circle' :
         d === "Town" ? 'fas fa-landmark' :
-        d === "Railroad" ? 'fas fa-train' :
+        //d === "Railroad" ? 'fas fa-train' :
         d === "Other" ? 'fas fa-question-circle' :
         'fas fa-question-circle';
     };
@@ -423,7 +423,7 @@
       eventLayer = L.layerGroup(),
       peopleLayer = L.layerGroup(),
       townLayer = L.layerGroup(),
-      railLayer = L.layerGroup(),
+      //railLayer = L.layerGroup(),
       otherLayer = L.layerGroup(),
       allPoints = L.layerGroup(),
       // define the overlays
@@ -432,7 +432,7 @@
           "Events": eventLayer,
           "People": peopleLayer,
           "Populated Places": townLayer,
-          "Railroads": railLayer,
+          //"Railroads": railLayer,
           "Other": otherLayer,
         },
         "<b>Places of Worship</b>": {
@@ -524,7 +524,7 @@
           map.removeLayer(eventLayer),
             map.removeLayer(peopleLayer),
             map.removeLayer(townLayer),
-            map.removeLayer(railLayer),
+            //map.removeLayer(railLayer),
             map.removeLayer(otherLayer),
             map.removeLayer(episcopalLayer),
             map.removeLayer(otherPWLayer),
@@ -864,6 +864,7 @@
                 shadowSize: [0, 0]
               })
             });
+/*
             let railPoints = L.marker([each.lat, each.long], {
               icon: L.ExtraMarkers.icon({
                 icon: 'fas fa-user-circle',
@@ -874,6 +875,7 @@
                 shadowSize: [0, 0]
               })
             });
+*/
             let other = L.marker([each.lat, each.long], {
               icon: L.ExtraMarkers.icon({
                 icon: 'fas fa-user-circle',
@@ -1235,6 +1237,7 @@
               // add the layer group to the map
               //townLayer.addTo(map);
             };
+/*
             // if the marker is a railroad...
             if (each.type == "Railroad") {
               railPoints = L.marker([each.lat, each.long], {
@@ -1284,6 +1287,7 @@
                               railPoints.closePopup();
                             });
               */
+/*              
               // if the currentYear is greater than or equal to the startYear and less than or equal to the endYear
               if (currentYear >= each.startYear && currentYear <= each.endYear) {
                 railLayer.addLayer(railPoints); // add the layer to the layer group;
@@ -1293,6 +1297,7 @@
               // add the layer group to the map
               //railLayer.addTo(map);
             };
+*/
             // if the marker is something...
             if (each.type == "Other") {
               other = L.marker([each.lat, each.long], {
@@ -1352,8 +1357,8 @@
               //otherLayer.addTo(map);
             };
             createTemporalLegend(currentYear);
-            sequenceUI(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, timeForm); // feeds layers to the time slider
-            updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, currentYear); // updates the layers
+            sequenceUI(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints,/* railPoints,*/ other, timeForm); // feeds layers to the time slider
+            updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints,/* railPoints,*/ other, currentYear); // updates the layers
           }); // end data.forEach
         }
       });
@@ -1387,7 +1392,7 @@
     }; // end createTemporalLegend function
 
     // add a UI slider
-    function sequenceUI(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, timeForm) {
+    function sequenceUI(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints,/* railPoints,*/ other, timeForm) {
 
       // create Leaflet control for the slider
       const sliderControl = L.control({
@@ -1422,7 +1427,7 @@
         var currentYear = document.getElementById('year').value; // define currentYear as the submitted year
         $('.slide-bar').val(currentYear); // adjust the time slider to the submitted year
         createTemporalLegend(currentYear); // run this function
-        updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, currentYear); // updates the layers
+        updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints,/* railPoints,*/ other, currentYear); // updates the layers
         e.preventDefault(); // prevent defaulting
       });
 
@@ -1430,13 +1435,13 @@
         .on('input change', function() {
           let currentYear = $(this).val(); // identifies the year selected
           createTemporalLegend(currentYear);
-          updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, currentYear); // updates the layers
+          updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints,/* railPoints,*/ other, currentYear); // updates the layers
         });
 
     }; // end sequenceUI function
 
     // update the layers based on the time slider year
-    function updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints, railPoints, other, currentYear) {
+    function updateLayers(each, episcopalChurches, otherPW, eventPoints, peoplePoints, townPoints,/* railPoints,*/ other, currentYear) {
 
       // for Episcopal churches, keep all markers on the map as long as the startYear is less than or equal to the currentYear
       if (currentYear >= each.startYear) {
@@ -1451,14 +1456,14 @@
         eventLayer.addLayer(eventPoints);
         peopleLayer.addLayer(peoplePoints);
         townLayer.addLayer(townPoints);
-        railLayer.addLayer(railPoints);
+        //railLayer.addLayer(railPoints);
         otherLayer.addLayer(other);
       } else {
         otherPWLayer.removeLayer(otherPW); // remove the layer from the layer group;
         eventLayer.removeLayer(eventPoints);
         peopleLayer.removeLayer(peoplePoints);
         townLayer.removeLayer(townPoints);
-        railLayer.removeLayer(railPoints);
+        //railLayer.removeLayer(railPoints);
         otherLayer.removeLayer(other);
       };
 
